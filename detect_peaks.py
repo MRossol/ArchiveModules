@@ -25,6 +25,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 """
 
+__all__ = ["detect_peaks", "_plot"]
+
 from __future__ import division, print_function
 import numpy as np
 
