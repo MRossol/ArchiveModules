@@ -1,16 +1,16 @@
+__author__ = 'MNR'
+
+__all__ = ['extract_DIC_numb', 'DIC_P', 'img_numb', 'get_h', 'PV_werror', 'sphere_fit', 'hemisphere_PV', 'cap_PV',
+           'DIC_PV', 'paraboloid_PV', 'p_integrate_PV', 'get_lines', 'get_all_lines', 'get_shifts', 'contour_overlay']
+
 import numpy as np
 import scipy as sc
-from scipy import misc
 import scipy.optimize
 import scipy.interpolate
 import DIC
 import sympy as sp
-import os
-import datetime
-import time
 import scipy.io
 from scipy import misc
-import pandas as pd
 import numpy.ma as ma
 import matplotlib as mpl
 import matplotlib.pyplot as mplt
@@ -18,11 +18,38 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def extract_DIC_numb(file):
+    """
+    extract file number from .mat file
+    Parameters
+    ----------
+    file : 'string'
+        .mat file path
+
+    Returns
+    -------
+    numb : 'int'
+        file number
+    """
     numb = file.split('/')[-1]
     return int(numb[:4])
 
 
 def DIC_P(data_path, DIC_data, t_shift=None):
+    """
+    Get pressure for each .mat file
+    Parameters
+    ----------
+    data_path : 'string'
+        file path for .dat file
+    DIC_data : 'instance'
+        DIC Class instance
+    t_shift : 'float'
+        time shift to align pressure and DIC data, default is None
+
+    Returns
+    -------
+        Array of [img #, time, pressure]
+    """
     data = np.loadtxt(data_path, skiprows=2)
 
     t_p = data[:, :2]
@@ -41,10 +68,36 @@ def DIC_P(data_path, DIC_data, t_shift=None):
 
 
 def img_numb(data, pressure):
+    """
+    ?
+    Parameters
+    ----------
+    data
+    pressure
+
+    Returns
+    -------
+
+    """
     return data[0, 0] + DIC.nearest(data[:, 2], pressure)
 
 
 def get_h(DIC_data, method='fit', z_shift=None):
+    """
+    extract accumulator height
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    method : 'string'
+        method to extract height, default = 'fit' (hemisphere)
+    z_shift : 'float'
+        z offset
+
+    Returns
+    -------
+        Array of height values in mm
+    """
 
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
@@ -107,6 +160,23 @@ def get_h(DIC_data, method='fit', z_shift=None):
 
 
 def PV_werror(DIC_data, pressure, step=None, z_shift=None):
+    """
+    Extract accumulator volume as function of pressure with error in volume calculation
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        pressure values
+    step : 'float'
+        step size for gridding DIC data, default = DIC step size
+    z_shift : 'float'
+        z offset
+
+    Returns
+    -------
+        Array of [[pressure, volume], [np.nan, volume_error]]
+    """
 
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
@@ -195,6 +265,21 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
 
 
 def sphere_fit(DIC_data, pressure, z_shift=None):
+    """
+    extract spherical fit parameters
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        Array of pressure values
+    z_shift :
+        z offset
+
+    Returns
+    -------
+        Array of [P_i, h, R, a_h, V, dV]
+    """
 
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
@@ -278,7 +363,23 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
 
 
 def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
+    """
+    Extract accumulator volume as function of pressure using hemispherical cap
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        pressure values
+    a : 'float'
+        cap radius, default = use spherical fit
+    z_shift : 'float'
+        z offset
 
+    Returns
+    -------
+        Array of [pressure, volume]
+    """
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
     Z = data['Z'].flatten()
@@ -348,6 +449,21 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
 
 
 def cap_PV(DIC_data, pressure, a):
+    """
+    Extract accumulator volume as function of pressure using hemispherical cap equation
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        pressure values
+    a : 'float'
+        cap radius
+
+    Returns
+    -------
+        Array of [pressure, volume]
+    """
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
     Z = data['Z'].flatten()
@@ -371,7 +487,25 @@ def cap_PV(DIC_data, pressure, a):
 
 
 def DIC_PV(DIC_data, pressure, step=0.01, method='linear', z_shift=None):
+    """
+    Extract accumulator volume as function of pressure by integreting DIC data
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        pressure values
+    step : 'float'
+        mesh grid spacing, default = 0.01 mm
+    method : 'string'
+        method of integration to re-grid DIC data
+    z_shift : 'float'
+        z offset, default = None
 
+    Returns
+    -------
+        Array of [pressure, volume]
+    """
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
     Z = data['Z'].flatten()
@@ -411,7 +545,21 @@ def DIC_PV(DIC_data, pressure, step=0.01, method='linear', z_shift=None):
 
 
 def paraboloid_PV(DIC_data, pressure, z_shift=None):
+    """
+    Extract accumulator volume as function of pressure using parabolic fit and parabolic cap equation
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        pressure values
+    z_shift : 'float'
+        z offset, default = None
 
+    Returns
+    -------
+        Array of [pressure, volume]
+    """
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
     Z = data['Z'].flatten()
@@ -478,7 +626,21 @@ def paraboloid_PV(DIC_data, pressure, z_shift=None):
 
 
 def p_integrate_PV(DIC_data, pressure, z_shift=None):
+    """
+    Extract accumulator volume as function of pressure using intergration of parabolic fit equation
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    pressure : 'array'
+        pressure values
+    a : 'float'
+        cap radius
 
+    Returns
+    -------
+        Array of [pressure, volume]
+    """
     data = DIC_data.get_data(0)
     sigma = data['sigma'].flatten()
     Z = data['Z'].flatten()
@@ -545,7 +707,27 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
 
 
 def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
+    """
+    Extract line scans through accumulator center.
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    frame : 'int'
+        frame number
+    a : 'float'
+        cap radius
+    xo : 'float'
+        x center
+    yo : 'float'
+        y center
+    zo : 'float'
+        z center
 
+    Returns
+    -------
+        Arrays of [x, z] for DIC_data, hemisphere_fit, hemisphere_cap
+    """
     data = DIC_data.get_data(frame)
     sigma = data['sigma']
     bad_pos = np.where(sigma.flatten() == -1)
@@ -595,7 +777,27 @@ def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
 
 
 def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
+    """
+    Extract all line scans through accumulator center.
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    frame : 'int'
+        frame number
+    a : 'float'
+        cap radius
+    xo : 'float'
+        x center
+    yo : 'float'
+        y center
+    zo : 'float'
+        z center
 
+    Returns
+    -------
+        Arrays of [x, z] for DIC_data, hemisphere_fit, hemisphere_cap, parabolic_fit
+    """
     data = DIC_data.get_data(frame)
     sigma = data['sigma']
     bad_pos = np.where(sigma.flatten() == -1)
@@ -653,6 +855,21 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
 
 
 def get_shifts(DIC_data, frame = -1, z_shift=None):
+    """
+    Extract accumulator center
+    Parameters
+    ----------
+    DIC_data : 'instance'
+        DIC Class instance
+    frame : 'int'
+        frame number, default = -1 (last frame)
+    z_shift : 'float'
+        z offset, default = None
+
+    Returns
+    -------
+        xo, yo, zo of z-center
+    """
 
     data = DIC_data.get_data(frame)
     sigma = data['sigma']

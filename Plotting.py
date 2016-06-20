@@ -1,20 +1,15 @@
 __author__ = 'MNR'
 
-__all__ = ["line_plot", "COLORS", "def_linestyles", "def_markers", "contour_plot", "colorbar"]
+__all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle", "line_plot", "dual_plot", "error_plot",
+           "contour_plot", "surface_plot", "colorbar"]
 
 import itertools
 import matplotlib as mpl
 import matplotlib.pyplot as mplt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.gridspec as gridspec
 import copy
 import numpy as np
 import numpy.ma as ma
-#from matplotlib import rc
-#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
-#rc('text', usetex=True)
-
 
 COLORS = {
     "red": (0.7176, 0.1098, 0.1098),
@@ -66,7 +61,7 @@ def riffle(*args):
 
 def line_plot(data,
               xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
-              colors=None, linestyles='Automatic', linewidth=2, markers=None,
+              colors=None, linestyles='Automatic', linewidth=2, markers=None, markersize=5,
               font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
               add_legend=None, legend_location=0,
               figsize=(8, 6), resolution=300, showfig=True, filename=None):
@@ -97,6 +92,8 @@ def line_plot(data,
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
+    markersize : 'Float'
+        Marker size for each marker in 'data'.
     markers : 'array-like'
         Iterable list of Matplotlib designations for the marker for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
@@ -162,7 +159,7 @@ def line_plot(data,
     axis = fig.add_subplot(111)
 
     for line in lines:
-        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth, marker=next(markers), color=next(colors),
+        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors),
                   linestyle=next(linestyles))
 
     mpl.rcParams['font.sans-serif'] = font
@@ -206,7 +203,7 @@ def line_plot(data,
 
 def dual_plot(data1, data2,
               xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
-              axis_colors = 'k', colors=None, linestyles='Automatic', linewidth=2, markers=None,
+              axis_colors = 'k', colors=None, linestyles='Automatic', linewidth=2, markersize=5, markers=None,
               font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
               add_legend=None, legend_location=0,
               figsize=(8, 6), resolution=300, showfig=True, filename=None):
@@ -242,6 +239,8 @@ def dual_plot(data1, data2,
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
+    markersize : 'Float'
+        Marker size for each marker in 'data'.
     markers : 'array-like'
         Iterable list of Matplotlib designations for the marker for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
@@ -343,13 +342,13 @@ def dual_plot(data1, data2,
     axis1 = fig.add_subplot(111)
 
     for line in lines1:
-        axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth, marker=next(markers1), color=next(colors1),
+        axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers1), color=next(colors1),
                   linestyle=next(linestyles1))
 
     axis2 = axis1.twinx()
 
     for line in lines2:
-        axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth, marker=next(markers2), color=next(colors2),
+        axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers2), color=next(colors2),
                   linestyle=next(linestyles2))
 
 
@@ -418,7 +417,7 @@ def dual_plot(data1, data2,
 
 def error_plot(data,
               xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
-              colors=None, linestyles=None, linewidth=2, markers='Automatic',
+              colors=None, linestyles=None, linewidth=2, markersize=5, markers='Automatic',
               font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
               add_legend=None, legend_location=0,
               figsize=(8, 6), resolution=300, showfig=True, filename=None):
@@ -450,6 +449,8 @@ def error_plot(data,
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
+    markersize : 'Float'
+        Marker size for each marker in 'data'.
     markers : 'array-like'
         Iterable list of Matplotlib designations for the marker for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
@@ -529,7 +530,7 @@ def error_plot(data,
         else:
             y_error = error
 
-        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth, marker=next(markers), color=next(colors),
+        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors),
                   linestyle=next(linestyles))
 
     mpl.rcParams['font.sans-serif'] = font

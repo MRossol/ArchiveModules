@@ -5,7 +5,6 @@ __all__ = ["fit_plane", "nearest", "find_linear_fit", "shift_SS", "average_SS",
 
 import os
 import datetime
-import time
 import scipy.io
 import scipy.interpolate
 from scipy import misc

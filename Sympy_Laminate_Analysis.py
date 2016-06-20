@@ -110,7 +110,7 @@ class Iso_Material(Material):
             G1 = G2 = G
 
         # call parent constructor with simplified arguments
-        super().__init__(E1, E2, G1, G2, v12, v21)
+        Material.__init__(E1, E2, G1, G2, v12, v21)
 
 
 class Ortho_Material(Material):
@@ -140,7 +140,7 @@ class Ortho_Material(Material):
             v21 = Poissons_Ratio(v12, E1, E2)
 
         # call parent constructor with simplified arguments
-        super().__init__(E1, E2, G1, G2, v12, v21)
+        Material.__init__(E1, E2, G1, G2, v12, v21)
 
 
 class Ply(object):
@@ -284,7 +284,7 @@ class GSCS_Ply(Ply):
         Etc = sp.simplify(2 * (1 + vtc) * Gtc)
 
         # call parent constructor with simplified arguments
-        super().__init__(Eac, Etc, Gac, vac, Poissons_Ratio(vac, Eac, Etc))
+        Ply.__init__(Eac, Etc, Gac, vac, Poissons_Ratio(vac, Eac, Etc))
 
 
 class Ortho_Ply(Ply):
@@ -311,7 +311,7 @@ class Ortho_Ply(Ply):
             v21 = Poissons_Ratio(v12, E11, E22)
 
         # call parent constructor with simplified arguments
-        super().__init__(E11, E22, G12, v12, v21)
+        Ply.__init__(E11, E22, G12, v12, v21)
 
 
 class Laminate(object):

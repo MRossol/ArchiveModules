@@ -1,6 +1,6 @@
 __author__ = 'MNR'
 
-__all__ = ['get_dB', 'get_Vt', 'detect_peaks', 'AE', 'AE_cont', 'AE_wavelets']
+__all__ = ['get_dB', 'get_Vt', 'get_t_end', 'AE', 'AE_cont', 'AE_wavelets']
 
 import datetime
 import numpy as np
@@ -194,8 +194,29 @@ class AE(object):
 
 
 class AE_cont(AE):
-    def __init__(self, file, threshold, PDT=100, HDT=200, HLT=300):
+    def __init__(self, file, threshold, PDT=100, HDT=200, HLT=300, gain=40):
+        """
+        Extracts AE wavelets from continuous AE waveform and initiates AE instance
+        Parameters
+        ----------
+        file : 'string;
+            file path for .csv containing continuous waveform data
+        threshold : 'float'
+            threshold for AE event in dB
+        PDT : 'float'
+            Peak Detection Time = minimum wavelet length in us
+        HDT : 'float'
+            Hit Detection Time = time till end of wavelet in us after last count
+        HLT : 'float'
+            Hit Lag Time = minimum time between events
+        gain : 'float'
+            pre-gain in dB
 
+        Returns
+        -------
+        self.path : 'string'
+            .csv file path
+        """
 
         self.path = file
 
@@ -211,7 +232,7 @@ class AE_cont(AE):
         time = np.arange(len(data))/frequency
         waveform = np.dstack((time*10**6, data - np.mean(data)))[0]
 
-        points = np.where(waveform[:, 1] >= get_Vt(threshold))[0]
+        points = np.where(waveform[:, 1] >= get_Vt(threshold, gain=gain))[0]
         dt = np.diff(waveform[points, 0])
         events = dt <= (HDT + HLT)
         clusters, nclusters = ndimage.label(events)
@@ -227,24 +248,48 @@ class AE_cont(AE):
                 wavelet[:, 0] = wavelet[:, 0] - wavelet[0, 0]
                 wavelets.append(wavelet)
 
-        super().__init__(wavelets, np.asarray(event_times), threshold, gain)
+        AE.__init__(wavelets, np.asarray(event_times), threshold, gain)
 
-    def export_data(self, new_path=None):
+    def export_data(self, filename=None):
+        """
+        export AE wavelets to .dat
+        Parameters
+        ----------
+        new_path : 'string'
+            new filename, default is .csv filename
+
+        Returns
+        -------
+        """
         output=[]
         for wavelet, e_time in zip(self.wavelets, self.event_times):
             output.append(np.dstack((np.ones(len(wavelet))*e_time, wavelet[:, 0], wavelet[:, 1]))[0])
 
-        if new_path is None:
-            new_path = self.path[:-4] + '.dat'
+        if filename is None:
+            filename = self.path[:-4] + '.dat'
 
-        np.savetxt(new_path, np.vstack(output))
+        np.savetxt(filename, np.vstack(output))
 
 
 class AE_wavelets(AE):
     def __init__(self, file, threshold, gain=40):
+        """
+        Loads AE wavelets from .dat file and initiates AE instance
+        Parameters
+        ----------
+        file : 'string'
+            .dat filename
+        threshold : 'float'
+            threshold in dB used to determine AE event
+        gain : 'float'
+            Pre-gain in dB
+
+        Returns
+        -------
+        """
         data = np.loadtxt(file)
 
         event_times = np.unique(data[:, 0])
         wavelets = [data[np.where(data[:, 0] == event)[0], 1:] for event in event_times]
 
-        super().__init__(wavelets, event_times, threshold, gain)
+        AE.__init__(wavelets, event_times, threshold, gain)

@@ -199,7 +199,7 @@ class virgin_ct(compact_tension):
         areas = [triangle_area(maximum, minimum) for (maximum, minimum) in list(zip(maxima, minima))]
 
         # call parent constructor with simplified arguments
-        super().__init__(data, load_time_data, linear_fit, shifted_data, load_disp_data, maxima, minima, areas)
+        compact_tension.__init__(data, load_time_data, linear_fit, shifted_data, load_disp_data, maxima, minima, areas)
 
 
 class healed_ct(compact_tension):
@@ -242,5 +242,5 @@ class healed_ct(compact_tension):
         areas = [triangle_area(maximum, minimum) for (maximum, minimum) in list(zip(maxima, minima))]
 
         # call parent constructor with simplified arguments
-        super().__init__(data, load_time_data, (linear_fit, min_fit, end_fit), shifted_data, load_disp_data,
+        compact_tension.__init__(data, load_time_data, (linear_fit, min_fit, end_fit), shifted_data, load_disp_data,
                          maxima, minima, areas)
