@@ -66,7 +66,7 @@ def nearest(array, value):
             return pos
 
 
-def find_linear_fit(data, max_pos):
+def find_linear_fit(data, max_pos, buffer=2):
     """
     Find optimum linear fit by maximizing R^2.
     Parameters
@@ -83,7 +83,7 @@ def find_linear_fit(data, max_pos):
 
     fit = []
 
-    for xo in range(max_pos-2):
+    for xo in range(max_pos-buffer):
         linear_data = data[xo:max_pos + 1]
         x = linear_data[:, 0]
         y = linear_data[:, 1]
@@ -100,7 +100,7 @@ def find_linear_fit(data, max_pos):
     return opt_fit
 
 
-def shift_SS(data, e1=0.1, e2=0.3):
+def shift_SS(data, e1=0.1, e2=0.3, buffer=2):
     """
     Shifts stress strain data to pass through origin, using linear fit of elastic region.
     ----------
@@ -114,7 +114,7 @@ def shift_SS(data, e1=0.1, e2=0.3):
     shifted stress strain curve passing through the origin
     """
 
-    m, b = find_linear_fit(data, nearest(data[:, 0], e2))[1:]
+    m, b = find_linear_fit(data, nearest(data[:, 0], e2), buffer=buffer)[1:]
     origin = -1*(b/m)
     shift_data = data - [origin, 0]
 

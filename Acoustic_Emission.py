@@ -204,9 +204,9 @@ class AE_cont(AE):
         threshold : 'float'
             threshold for AE event in dB
         PDT : 'float'
-            Peak Detection Time = minimum wavelet length in us
+            Peak Definition Time = minimum wavelet length in us
         HDT : 'float'
-            Hit Detection Time = time till end of wavelet in us after last count
+            Hit Definition Time = time till end of wavelet in us after last count
         HLT : 'float'
             Hit Lag Time = minimum time between events
         gain : 'float'
