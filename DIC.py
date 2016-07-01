@@ -66,7 +66,7 @@ def nearest(array, value):
             return pos
 
 
-def find_linear_fit(data, max_pos, buffer=2):
+def find_linear_fit(data, max_pos):
     """
     Find optimum linear fit by maximizing R^2.
     Parameters
@@ -83,8 +83,8 @@ def find_linear_fit(data, max_pos, buffer=2):
 
     fit = []
 
-    for xo in range(max_pos-buffer):
-        linear_data = data[xo:max_pos + 1]
+    for xo in range(max_pos-(max_pos//10)):
+        linear_data = data[xo:max_pos]
         x = linear_data[:, 0]
         y = linear_data[:, 1]
         A = np.vstack([x, np.ones(len(y))]).T
@@ -100,7 +100,7 @@ def find_linear_fit(data, max_pos, buffer=2):
     return opt_fit
 
 
-def shift_SS(data, e1=0.1, e2=0.3, buffer=2):
+def shift_SS(data, e1=0.1, e2=0.3):
     """
     Shifts stress strain data to pass through origin, using linear fit of elastic region.
     ----------
@@ -114,7 +114,7 @@ def shift_SS(data, e1=0.1, e2=0.3, buffer=2):
     shifted stress strain curve passing through the origin
     """
 
-    m, b = find_linear_fit(data, nearest(data[:, 0], e2), buffer=buffer)[1:]
+    m, b = find_linear_fit(data, nearest(data[:, 0], e2))[1:]
     origin = -1*(b/m)
     shift_data = data - [origin, 0]
 
@@ -186,7 +186,7 @@ def fit_line(data):
     return np.linalg.lstsq(A, y)[0]
 
 
-def chord_modulus(data, e1=0.1, e2=0.3):
+def chord_modulus(data, e1=0.1, e2=0.3, return_all=False):
     """
     Find Youngs modulus from data between e1 and e2
     Parameters
@@ -205,7 +205,11 @@ def chord_modulus(data, e1=0.1, e2=0.3):
     e2Pos = nearest(data[:, 0], e2)
     fitData = data[e1Pos:e2Pos]
     E, so = fit_line(fitData)
-    return E
+
+    if return_all:
+        return E, so
+    else:
+        return E
 
 
 def get_t_start(path):

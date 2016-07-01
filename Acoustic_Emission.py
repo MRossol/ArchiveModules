@@ -194,7 +194,7 @@ class AE(object):
 
 
 class AE_cont(AE):
-    def __init__(self, file, threshold, PDT=100, HDT=200, HLT=300, gain=40):
+    def __init__(self, file, threshold, PDT=100, HDT=200, HLT=300):
         """
         Extracts AE wavelets from continuous AE waveform and initiates AE instance
         Parameters
@@ -248,7 +248,7 @@ class AE_cont(AE):
                 wavelet[:, 0] = wavelet[:, 0] - wavelet[0, 0]
                 wavelets.append(wavelet)
 
-        AE.__init__(wavelets, np.asarray(event_times), threshold, gain)
+        AE.__init__(self, wavelets, np.asarray(event_times), threshold, gain)
 
     def export_data(self, filename=None):
         """
@@ -292,4 +292,4 @@ class AE_wavelets(AE):
         event_times = np.unique(data[:, 0])
         wavelets = [data[np.where(data[:, 0] == event)[0], 1:] for event in event_times]
 
-        AE.__init__(wavelets, event_times, threshold, gain)
+        AE.__init__(self, wavelets, event_times, threshold, gain)

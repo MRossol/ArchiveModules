@@ -23,7 +23,7 @@ def RGB_to_BW(img):
     return np.dot(img, [0.299, 0.587, 0.114])
 
 class AC(object):
-    def __inti__(self, xv, yv, cor):
+    def __init__(self, xv, yv, cor):
         """
         Initiate new AC Class instance
         Parameters
@@ -101,7 +101,7 @@ class extract_AC(AC):
                                    max_offset + x_offset:img_size_offset[1] + x_offset]
                 cor[y, x] = np.corrcoef(plaquette.reshape(-1), offset_plaquette.reshape(-1))[0, 1]
 
-        AC.__init__(xv, yv, cor)
+        AC.__init__(self, xv, yv, cor)
 
     def export_to_mat(self, filename=None):
         """
@@ -139,4 +139,4 @@ class import_AC(AC):
         yv = AC_data['y']
         cor = AC_data['AC']
 
-        AC.__init__(xv, yv, cor)
+        AC.__init__(self, xv, yv, cor)
