@@ -756,9 +756,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None,
             cbar.set_label(colorbar_label, size=fontsize_colorbar)
 
         if colorbar_lines:
-            if contour_color is None:
-                cbar.add_lines(cl_levels, colors=('k',)*len(cl_levels), linewidths=(contour_width,)*len(cl_levels))
-            else:
+            if contour_color is not None:
                 cbar.add_lines(cl)
 
     fig.tight_layout()

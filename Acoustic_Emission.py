@@ -126,11 +126,13 @@ class AE(object):
         self.durations = np.asarray(durations)
         self.energies = np.asarray(energies)
 
-        self.data = pd.DataFrame({'counts': self.counts,
-                                   'amplitudes': self.amplitudes,
-                                   'rise_ts': self.rise_ts,
-                                   'durations': self.durations,
-                                   'energies': self.energies})
+        self.data = pd.DataFrame({
+            'event_times': self.event_times,
+            'counts': self.counts,
+            'amplitudes': self.amplitudes,
+            'rise_ts': self.rise_ts,
+            'durations': self.durations,
+            'energies': self.energies})
 
     def get_SS(self, file, percentage=True):
         """
