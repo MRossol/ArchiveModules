@@ -34,7 +34,7 @@ def extract_DIC_numb(file):
     return int(numb[:4])
 
 
-def DIC_P(data_path, DIC_data, t_shift=None):
+def DIC_P(data_path, DIC_data, t_shift=None, KPa=False):
     """
     Get pressure for each .mat file
     Parameters
@@ -63,6 +63,9 @@ def DIC_P(data_path, DIC_data, t_shift=None):
     imgs = [extract_DIC_numb(file) for file in DIC_data.mat]
     times = img_t_interp(imgs)
     pressures = [t_p[DIC.nearest(t_p[:, 0], t), 1] for t in times]
+
+    if KPa:
+        pressures = np.asarray(pressures) * 6.89476
 
     return np.dstack((imgs, times, pressures))[0]
 

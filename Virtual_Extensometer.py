@@ -1,4 +1,4 @@
-__author__ = 'MNR'
+__author__ = 'Michael Rossol'
 
 __all__ = ["euclidean_dist", "RGB_to_BW", "img_processing", "img_len", "img_load"]
 

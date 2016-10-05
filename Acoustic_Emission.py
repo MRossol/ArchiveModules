@@ -1,4 +1,4 @@
-__author__ = 'MNR'
+__author__ = 'Michael Rossol'
 
 __all__ = ['get_dB', 'get_Vt', 'get_t_end', 'AE', 'AE_cont', 'AE_wavelets']
 
