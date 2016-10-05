@@ -1,4 +1,4 @@
-__author__ = 'MNR'
+__author__ = 'Michael Rossol'
 
 __all__ = ['extract_DIC_numb', 'DIC_P', 'img_numb', 'get_h', 'PV_werror', 'sphere_fit', 'hemisphere_PV', 'cap_PV',
            'DIC_PV', 'paraboloid_PV', 'p_integrate_PV', 'get_lines', 'get_all_lines', 'get_shifts', 'contour_overlay']
