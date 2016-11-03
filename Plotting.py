@@ -1,7 +1,6 @@
 __author__ = 'MNR'
 
-__all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle", "line_plot", "dual_plot", "error_plot",
-           "contour_plot", "surface_plot", "colorbar"]
+__all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle", "line_plot", "dual_plot", "error_plot", "contour_plot", "surface_plot", "colorbar"]
 
 import itertools
 import matplotlib as mpl

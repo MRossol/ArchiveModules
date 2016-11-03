@@ -5,6 +5,7 @@ __all__ = ["find_max_min_pos", "find_linear_fit", "nearest", "triangle_area", "r
 
 import numpy as np
 
+
 def find_max_min_pos(data, x0, window=100):
     """
     Finds positions of local maximums and following minimums.

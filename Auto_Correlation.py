@@ -97,8 +97,7 @@ class extract_AC(AC):
                 x_offset = xv[y, x]
                 y_offset = yv[y, x]
 
-                offset_plaquette = img[max_offset + y_offset:img_size_offset[0] + y_offset,
-                                   max_offset + x_offset:img_size_offset[1] + x_offset]
+                offset_plaquette = img[max_offset + y_offset:img_size_offset[0] + y_offset, max_offset + x_offset:img_size_offset[1] + x_offset]
                 cor[y, x] = np.corrcoef(plaquette.reshape(-1), offset_plaquette.reshape(-1))[0, 1]
 
         AC.__init__(self, xv, yv, cor)
