@@ -1,4 +1,4 @@
-__author__ = 'MNR'
+__author__ = 'Michael N Rossol'
 
 __all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle", "line_plot", "dual_plot", "error_plot", "contour_plot", "surface_plot", "colorbar"]
 
@@ -24,6 +24,7 @@ COLORS = {
     "black": (0.0, 0.0, 0.0)
 }
 
+
 def get_COLORS(colors, n=None):
     """
     Parameters
@@ -37,7 +38,7 @@ def get_COLORS(colors, n=None):
     RGB color codes for plotting functions
     """
     if n is not None:
-        colors = np.asarray([[color,]*n for color in colors]).flatten()
+        colors = np.asarray([[color, ] * n for color in colors]).flatten()
 
     return [COLORS[color] for color in colors]
 
@@ -58,12 +59,7 @@ def riffle(*args):
     return [item for sublist in zip(*args) for item in sublist]
 
 
-def line_plot(data,
-              xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
-              colors=None, linestyles='Automatic', linewidth=2, markers=None, markersize=5,
-              font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
-              add_legend=None, legend_location=0,
-              figsize=(8, 6), resolution=300, showfig=True, filename=None):
+def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2), colors=None, linestyles='Automatic', linewidth=2, markers=None, markersize=5, font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2, add_legend=None, legend_location=0, figsize=(8, 6), resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -158,8 +154,7 @@ def line_plot(data,
     axis = fig.add_subplot(111)
 
     for line in lines:
-        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors),
-                  linestyle=next(linestyles))
+        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors), linestyle=next(linestyles))
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -200,12 +195,7 @@ def line_plot(data,
         mplt.show()
 
 
-def dual_plot(data1, data2,
-              xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
-              axis_colors = 'k', colors=None, linestyles='Automatic', linewidth=2, markersize=5, markers=None,
-              font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
-              add_legend=None, legend_location=0,
-              figsize=(8, 6), resolution=300, showfig=True, filename=None):
+def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2), axis_colors='k', colors=None, linestyles='Automatic', linewidth=2, markersize=5, markers=None, font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2, add_legend=None, legend_location=0,figsize=(8, 6), resolution=300, showfig=True, filename=None):
     """
 
     Parameters
@@ -234,8 +224,7 @@ def dual_plot(data1, data2,
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines in 'data'.
     linestyles : 'array-like'
-        Iterable list of Matplotlib designations for the linestyle for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the linestyle for each line in 'data'. Will be cycled if fewer entries are specified than the number of lines in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
     markersize : 'Float'
@@ -286,21 +275,17 @@ def dual_plot(data1, data2,
             colors1 = itertools.cycle(colors[::2])
             colors2 = itertools.cycle(colors[1::2])
     else:
-        colors1 = itertools.cycle((
-                                  COLORS["blue"],
+        colors1 = itertools.cycle((COLORS["blue"],
                                   COLORS["red"],
                                   COLORS["purple"],
                                   COLORS["cyan"],
-                                  COLORS["lime"]
-                                   ))
+                                  COLORS["lime"]))
 
-        colors2 = itertools.cycle((
-                                  COLORS["green"],
+        colors2 = itertools.cycle((COLORS["green"],
                                   COLORS["orange"],
                                   COLORS["grey"],
                                   COLORS["teal"],
-                                  COLORS["brown"]
-                                   ))
+                                  COLORS["brown"]))
 
     if linestyles is None:
         linestyles1 = itertools.cycle(('',))
@@ -330,7 +315,7 @@ def dual_plot(data1, data2,
             markers1 = itertools.cycle(markers[::2])
             markers2 = itertools.cycle(markers[1::2])
 
-    if len(axis_colors)==1:
+    if len(axis_colors) == 1:
         axis_color1 = axis_colors
         axis_color2 = axis_colors
     else:
@@ -341,15 +326,12 @@ def dual_plot(data1, data2,
     axis1 = fig.add_subplot(111)
 
     for line in lines1:
-        axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers1), color=next(colors1),
-                  linestyle=next(linestyles1))
+        axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers1), color=next(colors1), linestyle=next(linestyles1))
 
     axis2 = axis1.twinx()
 
     for line in lines2:
-        axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers2), color=next(colors2),
-                  linestyle=next(linestyles2))
-
+        axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers2), color=next(colors2), linestyle=next(linestyles2))
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -363,7 +345,7 @@ def dual_plot(data1, data2,
         axis1.set_xlabel(xlabel, fontsize=fontsize_axes)
 
     if ylabel is not None:
-        if len(ylabel)==1:
+        if len(ylabel) == 1:
             axis1.set_ylabel(ylabel, fontsize=fontsize_axes, color=axis_color1)
             axis2.set_ylabel(ylabel, fontsize=fontsize_axes, color=axis_color2)
         else:
@@ -374,7 +356,7 @@ def dual_plot(data1, data2,
         axis1.set_xlim(xlim)
 
     if ylim is not None:
-        if len(np.asarray(ylim).shape)==1:
+        if len(np.asarray(ylim).shape) == 1:
             axis1.set_ylim(ylim)
             axis2.set_ylim(ylim)
         else:
@@ -385,7 +367,7 @@ def dual_plot(data1, data2,
         axis1.set_xticks(xticks)
 
     if yticks is not None:
-        if len(np.asarray(yticks).shape)==1:
+        if len(np.asarray(yticks).shape) == 1:
             axis1.set_set_yticks(yticks)
             axis2.set_set_yticks(yticks)
         else:
@@ -414,12 +396,7 @@ def dual_plot(data1, data2,
         mplt.show()
 
 
-def error_plot(data,
-              xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
-              colors=None, linestyles=None, linewidth=2, markersize=5, markers='Automatic',
-              font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
-              add_legend=None, legend_location=0,
-              figsize=(8, 6), resolution=300, showfig=True, filename=None):
+def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2), colors=None, linestyles=None, linewidth=2, markersize=5, markers='Automatic', font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2, add_legend=None, legend_location=0, figsize=(8, 6), resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -529,8 +506,7 @@ def error_plot(data,
         else:
             y_error = error
 
-        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors),
-                  linestyle=next(linestyles))
+        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors), linestyle=next(linestyles))
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -571,13 +547,7 @@ def error_plot(data,
         mplt.show()
 
 
-def contour_plot(data, xlim=None, ylim=None, zlim=None,
-                 major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1.,
-                 colorbar_on=True, colorbar_location='right', colorbar_label=None,
-                 colorbar_lines=True, colorbar_ticks=None, colormap=None,
-                 font='Arial', fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
-                 axis_on=False, xlabel=None, ylabel=None, xticks=None, yticks=None, ticksize=(8, 2), borderwidth=2,
-                 figsize=6, resolution=300, showfig=True, filename=None):
+def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21, axis_on=False, xlabel=None, ylabel=None, xticks=None, yticks=None, ticksize=(8, 2), borderwidth=2, figsize=6, resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -666,7 +636,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None,
         cbar_size = max(figsize)/20
 
     if zlim is None:
-        zmin, zmax  = np.nanmin(z), np.nanmax(z)
+        zmin, zmax = np.nanmin(z), np.nanmax(z)
     else:
         zmin, zmax = zlim
 
@@ -749,6 +719,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None,
         caxis = divider.append_axes(colorbar_location, size=cbar_size, pad=cbar_padding)
 
         cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis, orientation=orientation, ticklocation=colorbar_location)
+
         cbar.ax.tick_params(labelsize=fontsize_other)
 
         if colorbar_label is not None:
@@ -767,11 +738,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None,
         mplt.show()
 
 
-def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Automatic',
-                 colorbar_on=True, colorbar_label=None, colorbar_ticks=None, colormap=None,
-                 font='Arial', fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
-                 axis_on=False, xlabel=None, ylabel=None, zlabel=None, xticks=None, yticks=None, zticks=None, ticksize=(8, 2), borderwidth=2,
-                 figsize=6, resolution=300, showfig=True, filename=None):
+def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Automatic', colorbar_on=True, colorbar_label=None, colorbar_ticks=None, colormap=None, font='Arial', fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21, axis_on=False, xlabel=None, ylabel=None, zlabel=None, xticks=None, yticks=None, zticks=None, ticksize=(8, 2), borderwidth=2, figsize=6, resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -877,7 +844,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
         figsize[0] += figsize[0]/10
 
     if zlim is None:
-        zmin, zmax  = np.nanmin(z), np.nanmax(z)
+        zmin, zmax = np.nanmin(z), np.nanmax(z)
     else:
         zmin, zmax = zlim
 
@@ -898,6 +865,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
     axis = fig.gca(projection='3d')
 
     surf = axis.plot_surface(x, y, z_m, rstride=stride, cstride=stride, linewidth=0, antialiased=False, cmap=cmap, norm=norm)
+
     axis.pbaspect = data_ratio
 
     mpl.rcParams['font.sans-serif'] = font
@@ -941,6 +909,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
 
     if colorbar_on:
         cbar = mplt.colorbar(surf, ticks=l_levels, orientation='vertical', ticklocation='right', shrink=1)
+
         cbar.ax.tick_params(labelsize=fontsize_other)
 
         if colorbar_label is not None:
@@ -955,11 +924,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
         mplt.show()
 
 
-def colorbar(zlim, ticks=None,
-             lines=None, line_color='k', linewidth=1,
-             colormap=None, extend='neither', ticklocation='right',
-             fontsize_other=18, label=None, fontsize_label=21,
-             figsize=6, resolution=300, showfig=True, filename=None):
+def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1, colormap=None, extend='neither', ticklocation='right', fontsize_other=18, label=None, fontsize_label=21, figsize=6, resolution=300, showfig=True, filename=None):
 
     """
     Parameters

@@ -153,7 +153,7 @@ def get_h(DIC_data, method='fit', z_shift=None):
 
             a = np.sqrt(h*(2*R - h))
 
-            if np.isnan(a) or a > a0*1.25 or z0>0:
+            if np.isnan(a) or a > a0 * 1.25 or z0 > 0:
                 h = np.nan
 
         height.append(h)
@@ -224,13 +224,13 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
 
         coords = np.vstack((Xi, Yi, Zi))
 
-        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords,))
+        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords, ))
 
         h = R + z0
 
         a_h = np.sqrt(h*(2*R - h))
 
-        if np.isnan(a_h) or a_h > a0*1.25 or z0>0:
+        if np.isnan(a_h) or a_h > a0 * 1.25 or z0>  0:
             V = np.nan
             dV = np.nan
         else:
@@ -250,7 +250,7 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
 
             def h_z(xy):
                 x, y = xy.T
-                return np.sqrt(R**2 -(x-x0)**2 - (y-y0)**2) + z0
+                return np.sqrt(R**2 - (x - x0)**2 - (y - y0)**2) + z0
 
             dz = xyz[:, 2] - h_z(xyz[:, :2])
             dV = np.sqrt(np.sum(dz**2))*step**2
@@ -301,7 +301,7 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
     y_lims = [Y.min(), Y.max()]
     a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
 
-    output=[]
+    output = []
     for frame in range(len(DIC_data.mat)):
         P_i = pressure[frame]
 
@@ -328,13 +328,13 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
 
         coords = np.vstack((Xi, Yi, Zi))
 
-        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords,))
+        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords, ))
 
         h = R + z0
 
         a_h = np.sqrt(h*(2*R - h))
 
-        if np.isnan(a_h) or a_h > a0*1.25 or z0>0:
+        if np.isnan(a_h) or a_h > a0 * 1.25 or z0 > 0:
             output.append([P_i, np.nan,  np.nan,  np.nan,  np.nan,  np.nan])
         else:
             XYi = np.dstack((Xi, Yi))[0]
@@ -352,7 +352,7 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
 
             def h_z(xy):
                 x, y = xy.T
-                return np.sqrt(R**2 -(x-x0)**2 - (y-y0)**2) + z0
+                return np.sqrt(R**2 - (x - x0)**2 - (y - y0)**2) + z0
 
             dz = xyz[:, 2] - h_z(xyz[:, :2])
             dV = np.sqrt(np.sum(dz**2))*step**2
@@ -425,13 +425,13 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
 
         coords = np.vstack((Xi, Yi, Zi))
 
-        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords,))
+        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords, ))
 
         h = R + z0
 
         a_h = np.sqrt(h*(2*R - h))
 
-        if np.isnan(a_h) or a_h > a0*1.25 or z0>0:
+        if np.isnan(a_h) or a_h > a0 * 1.25 or z0 > 0:
             a_h = a0
             h = Zi.max()
 
@@ -680,7 +680,7 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
             x_lims = x_range
             y_lims = y_range
 
-            h = -1* ifit([xo, yo])
+            h = -1 * ifit([xo, yo])
             a = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
             V = (1/2)*np.pi*a**2*h
         else:
@@ -692,16 +692,14 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
                 return params[0]*xo**2 + params[1]*xo + params[2]*y**2 + params[3]*y + params[4]
             y_lims = [sc.optimize.fsolve(yzfit, y_range[0]), sc.optimize.fsolve(yzfit, y_range[1])]
 
-            if np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2 > \
-                            (np.mean((x_range[1] - x_range[0], y_range[1] - y_range[0]))/2)*1.25:
+            if np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2 > (np.mean((x_range[1] - x_range[0], y_range[1] - y_range[0]))/2)*1.25:
+
                 y_lims = y_range
 
             xf, yf = sp.symbols('xf yf')
             sols = sp.solve(params[0]*xf**2 + params[1]*xf + params[2]*yf**2 + params[3]*yf + params[4], xf)
 
-            V = sc.integrate.dblquad(lambda x, y: params[0]*x**2 + params[1]*x + params[2]*y**2 + params[3]*y
-                                                  + params[4], y_lims[0], y_lims[1],
-                                   lambda x: sols[0].subs(yf, x), lambda x: sols[1].subs(yf, x))[0]
+            V = sc.integrate.dblquad(lambda x, y: params[0]*x**2 + params[1]*x + params[2]*y**2 + params[3]*y + params[4], y_lims[0], y_lims[1], lambda x: sols[0].subs(yf, x), lambda x: sols[1].subs(yf, x))[0]
 
         volume.append(V)
 
@@ -856,7 +854,7 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     return DIC_line, hemi_line, cap_line, para_line
 
 
-def get_shifts(DIC_data, frame = -1, z_shift=None):
+def get_shifts(DIC_data, frame=-1, z_shift=None):
     """
     Extract accumulator center
     Parameters
@@ -911,12 +909,7 @@ def get_shifts(DIC_data, frame = -1, z_shift=None):
     return x0, y0, Zo
 
 
-def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=None,
-                major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1.,
-                colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True,
-                colorbar_ticks=None, colormap=None,
-                font='Arial', fontsize_other=18, fontsize_colorbar=21,
-                figsize=6, resolution=300, showfig=True, filename=None):
+def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_other=18, fontsize_colorbar=21, figsize=6, resolution=300, showfig=True, filename=None):
     """
     Plot (x, y, z) arrays in 'data' as contours overlaid on top of DIC image.
     Parameters
@@ -1004,8 +997,8 @@ def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=No
         figsize = (figsize*a_ratio, figsize)
 
     if zlim is None:
-        cf_levels = np.linspace(np.nanmin(z), np.nanmax(z), 100)
-        cl_levels = np.linspace(np.nanmin(z), np.nanmax(z), 10)
+        cf_levels = np.linspace(np.nanmin(Zi), np.nanmax(Zi), 100)
+        cl_levels = np.linspace(np.nanmin(Zi), np.nanmax(Zi), 10)
         l_levels = None
     else:
         if major_spacing is None:

@@ -109,12 +109,11 @@ class img_processing(object):
             (t_ref, b_img) = cv2.threshold(self.img, 0, 1, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             self.thresh = t_ref
         elif isinstance(thresh, (list, tuple)):
-            b_img = cv2.adaptiveThreshold(self.img,1,cv2.ADAPTIVE_THRESH_MEAN_C,\
-            cv2.THRESH_BINARY,thresh[0], thresh[1])
+            b_img = cv2.adaptiveThreshold(self.img, 1, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, thresh[0], thresh[1])
         else:
             img_max = np.max(self.img)
             b_img = cv2.threshold(self.img, thresh, img_max, cv2.THRESH_BINARY)[1]
-            b_img[b_img==img_max] = 1
+            b_img[b_img == img_max] = 1
 
         if invert:
             zeros = b_img == 0
@@ -290,7 +289,7 @@ def ext_len(img_p, centers):
 
     L = euclidean_dist(point1, point2)
 
-    return L , [point1.tolist(), point2.tolist()]
+    return L, [point1.tolist(), point2.tolist()]
 
 
 def img_load(data, file):

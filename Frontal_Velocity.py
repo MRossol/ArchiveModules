@@ -29,12 +29,11 @@ class img_process(object):
             (t_ref, b_img) = cv2.threshold(self.img, 0, 1, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
             self.thresh = t_ref
         elif isinstance(thresh, tuple):
-            b_img = cv2.adaptiveThreshold(self.img, 1 ,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-                            cv2.THRESH_BINARY_INV, thresh[0], thresh[1])
+            b_img = cv2.adaptiveThreshold(self.img, 1 , cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, thresh[0], thresh[1])
         else:
             img_max = np.max(self.img)
             b_img = cv2.threshold(self.img, thresh, img_max, cv2.THRESH_BINARY_INV)[1]
-            b_img[b_img==img_max] = 1
+            b_img[b_img == img_max] = 1
 
         self.img_b = b_img
 
@@ -65,10 +64,10 @@ class img_process(object):
         kernel = np.ones(erode_size, np.uint8)
 
         if binary_in:
-            erosion = cv2.erode(self.img_b, kernel, iterations = erode_n)
+            erosion = cv2.erode(self.img_b, kernel, iterations=erode_n)
             self.img_b = erosion
         else:
-            erosion = cv2.erode(self.img, kernel, iterations = erode_n)
+            erosion = cv2.erode(self.img, kernel, iterations=erode_n)
             self.img = erosion
 
     def find_front(self, direction='left'):
@@ -79,13 +78,17 @@ class img_process(object):
         if ypos.shape[0] > 0:
             min_pos = xpos.argmin()
             xmin, ymin = xpos[min_pos], ypos[min_pos]
-            if xmin == 0: xmin = np.nan
-            if ymin == 0: ymin = np.nan
+            if xmin == 0:
+                xmin = np.nan
+            if ymin == 0:
+                ymin = np.nan
 
             max_pos = xpos.argmax()
             xmax, ymax = xpos[max_pos], ypos[max_pos]
-            if xmax == xedge - 1: xmax = np.nan
-            if ymax == yedge - 1: ymax = np.nan
+            if xmax == xedge - 1:
+                xmax = np.nan
+            if ymax == yedge - 1:
+                ymax = np.nan
         else:
             xmin, xmax, ymin, ymax = np.nan, np.nan, np.nan, np.nan
 
@@ -95,6 +98,7 @@ class img_process(object):
         else:
             self.ypos = ymax
             self.xpos = xmax
+
 
 def delete_duplicates(path):
     for file in os.listdir(path):

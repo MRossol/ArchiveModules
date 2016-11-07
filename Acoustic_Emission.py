@@ -118,7 +118,7 @@ class AE(object):
             rise_ts.append(wavelet[np.argmax(wavelet[:, 1]), 0] - wavelet[peak_pos[0], 0])
             durations.append(wavelet[peak_pos[-1], 0] - wavelet[peak_pos[0], 0])
             MARSE = wavelet[peak_pos[0]:, 1]
-            energies.append(np.sum(MARSE[MARSE>0]))
+            energies.append(np.sum(MARSE[MARSE > 0]))
 
         self.counts = np.asarray(counts)
         self.amplitudes = np.asarray(amplitudes)
@@ -185,9 +185,9 @@ class AE(object):
         data_out : 'array like'
            array([keyword1_i, keyword2_i])
         """
-        if keyword1.lower().startswith(('n','i')):
+        if keyword1.lower().startswith(('n', 'i')):
             data_out = np.dstack((self.data.index, self.data[keyword2]))[0]
-        elif keyword2.lower().startswith(('n','i')):
+        elif keyword2.lower().startswith(('n', 'i')):
             data_out = np.dstack((self.data[keyword1], self.data.index,))[0]
         else:
             data_out = np.dstack((self.data[keyword1], self.data[keyword2]))[0]
@@ -222,7 +222,7 @@ class AE_cont(AE):
 
         self.path = file
 
-        data = pd.read_csv(file, skiprows=3).values[:,0]
+        data = pd.read_csv(file, skiprows=3).values[:, 0]
         with open(file) as f:
             info = [next(f) for _ in range(3)]
 
@@ -241,10 +241,10 @@ class AE_cont(AE):
 
         wavelets = []
         event_times = []
-        for label in np.arange(1, nclusters+1):
-            pos = np.where(clusters==label)[0][[0,-1]]
+        for label in np.arange(1, nclusters + 1):
+            pos = np.where(clusters == label)[0][[0, -1]]
             if np.diff(pos)[0] >= (PDT*10**-6*frequency):
-                start, stop = points[pos[0]], points[pos[1]+1] + int(np.round(HDT*10**-6*frequency)+1)
+                start, stop = points[pos[0]], points[pos[1] + 1] + int(np.round(HDT*10**-6*frequency) + 1)
                 wavelet = waveform[start:stop]
                 event_times.append(wavelet[0, 0]*10**-6 + s_time)
                 wavelet[:, 0] = wavelet[:, 0] - wavelet[0, 0]
@@ -263,7 +263,7 @@ class AE_cont(AE):
         Returns
         -------
         """
-        output=[]
+        output = []
         for wavelet, e_time in zip(self.wavelets, self.event_times):
             output.append(np.dstack((np.ones(len(wavelet))*e_time, wavelet[:, 0], wavelet[:, 1]))[0])
 

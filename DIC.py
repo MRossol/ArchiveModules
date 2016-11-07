@@ -123,7 +123,8 @@ def shift_SS(data, e1=0.1, e2=0.3):
     fitData = shift_data[e1Pos:e2Pos]
     m, b = fit_line(fitData)
     origin = -1*(b/m)
-    return np.vstack((np.zeros((1,2)), shift_data - [origin, 0]))
+
+    return np.vstack((np.zeros((1, 2)), shift_data - [origin, 0]))
 
 
 def average_SS(data, step=0.01, axial=True, clean=False):
@@ -145,11 +146,9 @@ def average_SS(data, step=0.01, axial=True, clean=False):
     strainRange = ([sample[0, 0] for sample in data], [sample[-1, 0] for sample in data])
 
     if axial:
-        strainRange = np.arange(np.max(strainRange[0]),
-                            np.min(strainRange[1]), step)
+        strainRange = np.arange(np.max(strainRange[0]), np.min(strainRange[1]), step)
     else:
-        strainRange = np.arange(-1 * np.min(strainRange[0]),
-                            -1 * np.max(strainRange[1]), step) * -1.
+        strainRange = np.arange(-1 * np.min(strainRange[0]), -1 * np.max(strainRange[1]), step) * -1.
 
     smooth = []
     for sample in data:
@@ -225,7 +224,7 @@ def get_t_start(path):
     with open(path) as f:
         ts = next(f)
     ts = ts.strip()[11:].split('.')
-    ts = datetime.datetime.strptime(ts[0].strip(), "%m/%d/%Y %H:%M:%S").timestamp() + float('.'+ ts[1])
+    ts = datetime.datetime.strptime(ts[0].strip(), "%m/%d/%Y %H:%M:%S").timestamp() + float('.' + ts[1])
     return ts
 
 
@@ -325,7 +324,7 @@ class DIC_3D(object):
         """
         return scipy.io.loadmat(self.mat[frame])
 
-    def get_mag(self, frame = 0):
+    def get_mag(self, frame=0):
         """
         Calculate DIC magnification (pixel/mm, mm/pixel).
         Parameters
@@ -358,7 +357,7 @@ class DIC_3D(object):
 
         return np.mean([np.mean(x[0, 1:] - x[0, :-1]), np.mean(y[1:, 0] - y[:-1, 0])])
 
-    def get_error(self, variables = 'Metric'):
+    def get_error(self, variables='Metric'):
         """
         Parameters
         ----------
@@ -408,11 +407,9 @@ class DIC_3D(object):
             sigma = np.where(data['sigma'].flatten() == -1.)
             if method.lower().startswith('p'):
                 if units.lower().startswith('m'):
-                    disp_data = np.dstack((data['X'].flatten(), data['Y'].flatten(), data['U'].flatten(),
-                                           data['V'].flatten()))[0]
+                    disp_data = np.dstack((data['X'].flatten(), data['Y'].flatten(), data['U'].flatten(), data['V'].flatten()))[0]
                 elif units.lower().startswith('p'):
-                    disp_data = np.dstack((data['x'].flatten(), data['y'].flatten(), data['u'].flatten(),
-                                           data['v'].flatten()))[0]
+                    disp_data = np.dstack((data['x'].flatten(), data['y'].flatten(), data['u'].flatten(), data['v'].flatten()))[0]
 
                 disp_data = np.delete(disp_data, sigma, axis=0)
 
@@ -454,7 +451,7 @@ class DIC_3D(object):
         """
         for filename in os.listdir(self.path):
             if filename.endswith('.csv'):
-                instron_data = pd.read_csv(os.path.join(self.path, filename), skiprows=8).values[:,[0,4]]
+                instron_data = pd.read_csv(os.path.join(self.path, filename), skiprows=8).values[:, [0, 4]]
                 te = get_t_end(os.path.join(self.path, filename))
 
         instron_data[:, 0] = te + (instron_data[:, 0] - instron_data[-1, 0])
@@ -490,7 +487,7 @@ class DIC_3D(object):
         sigma = mat['sigma']
 
         if var.lower().startswith('u') or var.lower().startswith('v'):
-            data = data - np.mean(np.delete(data.flatten(),np.where(sigma.flatten() == -1.)))
+            data = data - np.mean(np.delete(data.flatten(), np.where(sigma.flatten() == -1.)))
 
         data[sigma == -1.] = np.nan
 
@@ -514,12 +511,7 @@ class DIC_3D(object):
 
         return x, y, data
 
-    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None,
-                    major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1.,
-                    colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True,
-                    colorbar_ticks=None, colormap=None,
-                    font='Arial', fontsize_other=18, fontsize_colorbar=21,
-                    figsize=6, resolution=300, showfig=True, filename=None):
+    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_other=18, fontsize_colorbar=21, figsize=6, resolution=300, showfig=True, filename=None):
         """
         Parameters
         ----------
@@ -720,7 +712,7 @@ class DIC_2D(object):
 
         return np.mean([np.mean(x[0, 1:] - x[0, :-1]), np.mean(y[1:, 0] - y[:-1, 0])])
 
-    def get_error(self, variables = 'Pixel'):
+    def get_error(self, variables='Pixel'):
         """
         Parameters
         ----------
@@ -773,11 +765,10 @@ class DIC_2D(object):
                 else:
                     disp_data = np.dstack((data['x_c'].flatten(), data['y_c'].flatten(), data['u_c'].flatten(), data['v_c'].flatten()))[0]
 
-
                 disp_data = np.delete(disp_data, sigma, axis=0)
 
-                u_data = disp_data[:,:-1]
-                v_data = disp_data[:,[0,1,3]]
+                u_data = disp_data[:, :-1]
+                v_data = disp_data[:, [0, 1, 3]]
 
                 dudx, dudy = fit_plane(u_data)[:-1]
                 dvdx, dvdy = fit_plane(v_data)[:-1]
@@ -857,7 +848,7 @@ class DIC_2D(object):
         data = mat[var]
         sigma = mat['sigma']
         if var.startswith('u') or var.startswith('v') or var.startswith('u_c') or var.startswith('v_c'):
-            data = data - np.mean(np.delete(data.flatten(),np.where(sigma.flatten() == -1.)))
+            data = data - np.mean(np.delete(data.flatten(), np.where(sigma.flatten() == -1.)))
         data[sigma == -1.] = np.nan
 
         if coordinates.lower().startswith('p'):
@@ -880,12 +871,7 @@ class DIC_2D(object):
 
         return x, y, data
 
-    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None,
-                    major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1.,
-                    colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True,
-                    colorbar_ticks=None, colormap=None,
-                    font='Arial', fontsize_other=18, fontsize_colorbar=21,
-                    figsize=6, resolution=300, showfig=True, filename=None):
+    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_other=18, fontsize_colorbar=21, figsize=6, resolution=300, showfig=True, filename=None):
         """
         Parameters
         ----------
@@ -936,7 +922,7 @@ class DIC_2D(object):
         image = misc.imread(self.img[frame])
         ymax, xmax = image.shape[:2]
 
-        x, y, z = self.get_contourData(frame, var, coordinates = 'Pixels')
+        x, y, z = self.get_contourData(frame, var, coordinates='Pixels')
         y = -1*(y - ymax)
         z_m = ma.masked_invalid(z)
 

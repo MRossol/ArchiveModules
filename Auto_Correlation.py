@@ -22,6 +22,7 @@ def RGB_to_BW(img):
     """
     return np.dot(img, [0.299, 0.587, 0.114])
 
+
 class AC(object):
     def __init__(self, xv, yv, cor):
         """
@@ -56,6 +57,7 @@ class AC(object):
         img_AC = img_AC[img_AC[:, 1].argsort()]
         h_sp = np.interp(0.5, img_AC[:, 1], img_AC[:, 0])*2
         self.h_sp = h_sp
+
 
 class extract_AC(AC):
     def __init__(self, path, max_offset=None):
@@ -116,10 +118,11 @@ class extract_AC(AC):
         """
         xv, yv, cor = self.AC_2D
 
-        if filename is  None:
+        if filename is None:
             filename = self.path.split('.')[0] + '.mat'
 
         scipy.io.savemat(filename, mdict={'x': xv, 'y': yv, 'AC': cor})
+
 
 class import_AC(AC):
     def __init__(self, path):

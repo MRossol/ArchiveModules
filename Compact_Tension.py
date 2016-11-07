@@ -1,7 +1,6 @@
 __author__ = 'MNR'
 
-__all__ = ["find_max_min_pos", "find_linear_fit", "nearest", "triangle_area", "riffle", "compact_tension", "virgin_ct",
-           "healed_ct"]
+__all__ = ["find_max_min_pos", "find_linear_fit", "nearest", "triangle_area", "riffle", "compact_tension", "virgin_ct", "healed_ct"]
 
 import numpy as np
 
@@ -25,13 +24,13 @@ def find_max_min_pos(data, x0, window=100):
     if x_range[1] > np.max(data[:, 0]):
         x_range[1] = np.max(data[:, 0])
 
-    pos_range = [nearest(data[:,0], x) for x in x_range]
+    pos_range = [nearest(data[:, 0], x) for x in x_range]
 
     data_window = data[pos_range[0]:pos_range[1]]
     max_pos = pos_range[0] + data[pos_range[0]:pos_range[1], -1].argmax()
     min_pos = pos_range[0] + data[pos_range[0]:pos_range[1], -1].argmin()
 
-    if max_pos  >min_pos:
+    if max_pos > min_pos:
         max_pos = pos_range[0] + data[pos_range[0]:min_pos, -1].argmax()
 
     min_pos = max_pos + data[max_pos:pos_range[1], -1].argmin()
@@ -164,7 +163,7 @@ class compact_tension(object):
 
 
 class virgin_ct(compact_tension):
-     def __init__(self, data, guesses, window=100):
+    def __init__(self, data, guesses, window=100):
         """
         Create compact_tension instance for virgin_ct sample.
         Parameters
@@ -182,7 +181,7 @@ class virgin_ct(compact_tension):
         load_time_data = data[:, [0, 2]]
 
         if isinstance(guesses, int):
-            guesses = [guesses,]
+            guesses = [guesses, ]
 
         extrema = [find_max_min_pos(data[:, 1:], x0, window) for x0 in guesses]
 
@@ -204,7 +203,7 @@ class virgin_ct(compact_tension):
 
 
 class healed_ct(compact_tension):
-     def __init__(self, data):
+    def __init__(self, data):
         """
         Create compact_tension instance for healed_ct sample.
         Parameters
@@ -226,7 +225,7 @@ class healed_ct(compact_tension):
         shifted_data = data - [0, origin, 0]
         load_disp_data = shifted_data[:, 1:]
 
-        maxima = [shifted_data[max_pos],]
+        maxima = [shifted_data[max_pos], ]
 
         end_pos = shifted_data[max_pos:, 1].argmax()
         min_m, min_b = find_linear_fit(shifted_data[:max_pos + end_pos, 1:], max_pos, origin=False)[1:]
@@ -238,10 +237,9 @@ class healed_ct(compact_tension):
                              end_m * shifted_data[max_pos:max_pos + end_pos + 1, 1] + end_b))[0]
 
         x_min = ((end_b - min_b)/(min_m - end_m))
-        minima = [np.asarray([shifted_data[nearest(shifted_data[:, 1], x_min), 0], x_min, min_m * x_min + min_b]),]
+        minima = [np.asarray([shifted_data[nearest(shifted_data[:, 1], x_min), 0], x_min, min_m * x_min + min_b]), ]
 
         areas = [triangle_area(maximum, minimum) for (maximum, minimum) in list(zip(maxima, minima))]
 
         # call parent constructor with simplified arguments
-        compact_tension.__init__(self, data, load_time_data, (linear_fit, min_fit, end_fit), shifted_data, load_disp_data,
-                         maxima, minima, areas)
+        compact_tension.__init__(self, data, load_time_data, (linear_fit, min_fit, end_fit), shifted_data, load_disp_data, maxima, minima, areas)
