@@ -1,8 +1,3 @@
-__author__ = 'MNR'
-
-__all__ = ["fit_plane", "nearest", "find_linear_fit", "shift_SS", "average_SS",
-           "get_mat_numbs", "get_t_end", "get_t_start", "DIC_3D", "DIC_2D"]
-
 import os
 import datetime
 import scipy.io
@@ -14,6 +9,11 @@ import numpy.ma as ma
 import matplotlib as mpl
 import matplotlib.pyplot as mplt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+__author__ = 'MNR'
+
+__all__ = ["fit_plane", "nearest", "find_linear_fit", "shift_SS", "average_SS",
+           "get_mat_numbs", "get_t_end", "get_t_start", "DIC_3D", "DIC_2D"]
 
 
 def fit_plane(data):
@@ -102,7 +102,8 @@ def find_linear_fit(data, max_pos):
 
 def shift_SS(data, e1=0.1, e2=0.3):
     """
-    Shifts stress strain data to pass through origin, using linear fit of elastic region.
+    Shifts stress strain data to pass through origin, using linear fit of
+    elastic region.
     ----------
     data : 'array_like', shape(data) = (n,2)
         (disp,load) data.
@@ -129,7 +130,8 @@ def shift_SS(data, e1=0.1, e2=0.3):
 
 def average_SS(data, step=0.01, axial=True, clean=False):
     """
-    Find average of multiple Stress Strain curves. Options to average (clean) identical strain entries,
+    Find average of multiple Stress Strain curves. Options to average (clean)
+    identical strain entries,
     and to average axial (True) and transverse (False) Stress Strain data.
     Parameters
     ----------
@@ -143,12 +145,15 @@ def average_SS(data, step=0.01, axial=True, clean=False):
     average stress-strain curve of given input curves
     """
 
-    strainRange = ([sample[0, 0] for sample in data], [sample[-1, 0] for sample in data])
+    strainRange = ([sample[0, 0] for sample in data], [sample[-1, 0]
+                   for sample in data])
 
     if axial:
-        strainRange = np.arange(np.max(strainRange[0]), np.min(strainRange[1]), step)
+        strainRange = np.arange(np.max(strainRange[0]),
+                                np.min(strainRange[1]), step)
     else:
-        strainRange = np.arange(-1 * np.min(strainRange[0]), -1 * np.max(strainRange[1]), step) * -1.
+        strainRange = np.arange(-1 * np.min(strainRange[0]),
+                                -1 * np.max(strainRange[1]), step) * -1.
 
     smooth = []
     for sample in data:
@@ -179,8 +184,8 @@ def fit_line(data):
     """
 
     assert data.shape[1] == 2, "Data is not an nx2 array."
-    x=data[:, 0]
-    y=data[:, 1]
+    x = data[:, 0]
+    y = data[:, 1]
     A = np.vstack([x, np.ones(len(y))]).T
     return np.linalg.lstsq(A, y)[0]
 
@@ -224,7 +229,8 @@ def get_t_start(path):
     with open(path) as f:
         ts = next(f)
     ts = ts.strip()[11:].split('.')
-    ts = datetime.datetime.strptime(ts[0].strip(), "%m/%d/%Y %H:%M:%S").timestamp() + float('.' + ts[1])
+    ts = datetime.datetime.strptime(ts[0].strip(),
+         "%m/%d/%Y %H:%M:%S").timestamp() + float('.' + ts[1])
     return ts
 
 
@@ -242,7 +248,8 @@ def get_t_end(path):
         next(f)
         te = next(f)
     te = te.strip().split('"')[1]
-    te = datetime.datetime.strptime(te, "%A, %B %d, %Y %I:%M:%S %p").timestamp()
+    te = datetime.datetime.strptime(te,
+                                    "%A, %B %d, %Y %I:%M:%S %p").timestamp()
     return te
 
 
@@ -293,7 +300,9 @@ class DIC_3D(object):
         for filename in os.listdir(path):
             if filename.endswith('.mat') and not filename.startswith('.'):
                 mat_files.append(os.path.join(path, filename))
-            elif filename.endswith('_0.tif') or filename.endswith('_0.tiff') and not filename.startswith('.'):
+            elif (filename.endswith('_0.tif')
+                  or filename.endswith('_0.tiff')
+                  and not filename.startswith('.')):
                 img_files.append(os.path.join(path, filename))
 
         if len(mat_files) == 0:
@@ -338,7 +347,9 @@ class DIC_3D(object):
         """
         data = self.get_data(frame)
         sigma = np.where(data['sigma'].flatten() == -1.)
-        xy_data = np.dstack((data['x'].flatten(), data['y'].flatten(), data['X'].flatten(), data['Y'].flatten()))[0]
+        xy_data = np.dstack((data['x'].flatten(),
+                            data['y'].flatten(), data['X'].flatten(),
+                            data['Y'].flatten()))[0]
         xy_data = np.delete(xy_data, sigma, axis=0)
         pixel_dist = np.linalg.norm(xy_data[0, :2] - xy_data[-1, :2])
         metric_dist = np.linalg.norm(xy_data[0, 2:] - xy_data[-1, 2:])
@@ -355,7 +366,8 @@ class DIC_3D(object):
         x = data['x']
         y = data['y']
 
-        return np.mean([np.mean(x[0, 1:] - x[0, :-1]), np.mean(y[1:, 0] - y[:-1, 0])])
+        return (np.mean([np.mean(x[0, 1:] - x[0, :-1]),
+                np.mean(y[1:, 0] - y[:-1, 0])]))
 
     def get_error(self, variables='Metric'):
         """
@@ -392,7 +404,8 @@ class DIC_3D(object):
         Parameters
         ----------
         method : 'string', default='Plane'
-            method for strain calculation: Plane fits displacements to planes; Average takes mean of exx, eyy, exy.
+            method for strain calculation: Plane fits displacements to planes;
+            Average takes mean of exx, eyy, exy.
         units : 'string', default='Metric'
             Units used to calculate strains, pixels or metric.
 
@@ -407,9 +420,15 @@ class DIC_3D(object):
             sigma = np.where(data['sigma'].flatten() == -1.)
             if method.lower().startswith('p'):
                 if units.lower().startswith('m'):
-                    disp_data = np.dstack((data['X'].flatten(), data['Y'].flatten(), data['U'].flatten(), data['V'].flatten()))[0]
+                    disp_data = np.dstack((data['X'].flatten(),
+                                          data['Y'].flatten(),
+                                          data['U'].flatten(),
+                                          data['V'].flatten()))[0]
                 elif units.lower().startswith('p'):
-                    disp_data = np.dstack((data['x'].flatten(), data['y'].flatten(), data['u'].flatten(), data['v'].flatten()))[0]
+                    disp_data = np.dstack((data['x'].flatten(),
+                                          data['y'].flatten(),
+                                          data['u'].flatten(),
+                                          data['v'].flatten()))[0]
 
                 disp_data = np.delete(disp_data, sigma, axis=0)
 
@@ -421,7 +440,9 @@ class DIC_3D(object):
 
                 strains.append([dudx, dvdy, (dvdx + dudy)/2])
             else:
-                strain_data = np.dstack((data['exx'].flatten(), data['eyy'].flatten(), data['exy'].flatten()))[0]
+                strain_data = np.dstack((data['exx'].flatten(),
+                                        data['eyy'].flatten(),
+                                        data['exy'].flatten()))[0]
                 strain_data = np.delete(strain_data, sigma, axis=0)
 
                 strains.append(np.mean(strain_data, axis=0))
@@ -438,7 +459,8 @@ class DIC_3D(object):
         for filename in os.listdir(self.path):
             if filename.endswith('.dat'):
                 ts = get_t_start(os.path.join(self.path, filename))
-                img_time = np.loadtxt(os.path.join(self.path, filename), skiprows=2)[:, 1] + ts
+                img_time = np.loadtxt(os.path.join(self.path, filename),
+                                      skiprows=2)[:, 1] + ts
 
         return img_time[get_mat_numbs(self.mat)]
 
@@ -451,7 +473,8 @@ class DIC_3D(object):
         """
         for filename in os.listdir(self.path):
             if filename.endswith('.csv'):
-                instron_data = pd.read_csv(os.path.join(self.path, filename), skiprows=8).values[:, [0, 4]]
+                instron_data = pd.read_csv(os.path.join(self.path, filename),
+                                           skiprows=8).values[:, [0, 4]]
                 te = get_t_end(os.path.join(self.path, filename))
 
         instron_data[:, 0] = te + (instron_data[:, 0] - instron_data[-1, 0])
@@ -487,7 +510,8 @@ class DIC_3D(object):
         sigma = mat['sigma']
 
         if var.lower().startswith('u') or var.lower().startswith('v'):
-            data = data - np.mean(np.delete(data.flatten(), np.where(sigma.flatten() == -1.)))
+            data = data - np.mean(np.delete(data.flatten(),
+                                  np.where(sigma.flatten() == -1.)))
 
         data[sigma == -1.] = np.nan
 
@@ -511,7 +535,14 @@ class DIC_3D(object):
 
         return x, y, data
 
-    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_other=18, fontsize_colorbar=21, figsize=6, resolution=300, showfig=True, filename=None):
+    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None,
+                        major_spacing=None, minor_spacing=None,
+                        contour_width=1, contour_color='k', opacity=1.,
+                        colorbar_on=True, colorbar_location='right',
+                        colorbar_label=None, colorbar_lines=True,
+                        colorbar_ticks=None, colormap=None, font='Arial',
+                        fontsize_other=18, fontsize_colorbar=21, figsize=6,
+                        resolution=300, showfig=True, filename=None):
         """
         Parameters
         ----------
@@ -546,7 +577,8 @@ class DIC_3D(object):
         fontsize_axes : 'Int'
             Font size to be used for axes labels.
         fontsize_other : 'Int'
-            Font size to be used for all other text (legend, axis numbers, etc.).
+            Font size to be used for all other text (legend, axis numbers,
+            etc.).
         fontsize_colorbar : 'Int'
             Font size to be used for colorbar label.
         figsize : 'Tuple', default = '(8,6)'
@@ -560,7 +592,8 @@ class DIC_3D(object):
 
         Returns
         ----------
-        Plot (x, y, z) arrays in 'data' as contours overlaid on top of DIC image.
+        Plot (x, y, z) arrays in 'data' as contours overlaid on top of DIC
+        image.
         """
         image = misc.imread(self.img[frame])
         ymax, xmax = image.shape[:2]
@@ -590,8 +623,10 @@ class DIC_3D(object):
             if minor_spacing is None:
                 minor_spacing = major_spacing/10
 
-            cl_levels = np.arange(zlim[0], zlim[1] + major_spacing, major_spacing)
-            cf_levels = np.arange(zlim[0], zlim[1] + minor_spacing, minor_spacing)
+            cl_levels = np.arange(zlim[0], zlim[1] + major_spacing,
+                                  major_spacing)
+            cf_levels = np.arange(zlim[0], zlim[1] + minor_spacing,
+                                  minor_spacing)
 
             if colorbar_ticks is None:
                 l_levels = cl_levels[::2]
@@ -608,10 +643,12 @@ class DIC_3D(object):
 
         mplt.imshow(image, cmap=mplt.cm.gray, extent=[0, xmax, 0, ymax])
 
-        cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels, extend='both', antialiased=True)
+        cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels,
+                           extend='both', antialiased=True)
 
         if contour_color is not None:
-            cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,), linewidths=(contour_width,))
+            cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,),
+                              linewidths=(contour_width,))
 
         if colormap is not None:
             cf.set_cmap(colormap)
@@ -630,9 +667,12 @@ class DIC_3D(object):
 
         if colorbar_on:
             divider = make_axes_locatable(axis)
-            caxis = divider.append_axes(colorbar_location, size=cbar_size, pad=0.1)
+            caxis = divider.append_axes(colorbar_location, size=cbar_size,
+                                        pad=0.1)
 
-            cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis, orientation=orientation, ticklocation=colorbar_location)
+            cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis,
+                                 orientation=orientation,
+                                 ticklocation=colorbar_location)
             cbar.ax.tick_params(labelsize=fontsize_other)
 
             if colorbar_label is not None:
@@ -644,7 +684,8 @@ class DIC_3D(object):
         fig.tight_layout()
 
         if filename is not None:
-            mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+            mplt.savefig(filename, dpi=resolution, transparent=True,
+                         bbox_inches='tight')
 
         if showfig:
             mplt.show()
@@ -675,7 +716,9 @@ class DIC_2D(object):
         for filename in os.listdir(path):
             if filename.endswith('.mat') and not filename.startswith('.'):
                 mat_files.append(os.path.join(path, filename))
-            elif filename.endswith('.tif') or filename.endswith('.tiff') and not filename.startswith('.'):
+            elif (filename.endswith('.tif')
+                  or filename.endswith('.tiff')
+                  and not filename.startswith('.')):
                 img_files.append(os.path.join(path, filename))
 
         if len(mat_files) == 0:
@@ -710,7 +753,8 @@ class DIC_2D(object):
         x = data['x']
         y = data['y']
 
-        return np.mean([np.mean(x[0, 1:] - x[0, :-1]), np.mean(y[1:, 0] - y[:-1, 0])])
+        return (np.mean([np.mean(x[0, 1:] - x[0, :-1]),
+                np.mean(y[1:, 0] - y[:-1, 0])]))
 
     def get_error(self, variables='Pixel'):
         """
@@ -746,7 +790,8 @@ class DIC_2D(object):
         Parameters
         ----------
         method : 'string', default='Plane'
-            method for strain calculation: Plane fits displacements to planes; Average takes mean of exx, eyy, exy.
+            method for strain calculation: Plane fits displacements to planes;
+            Average takes mean of exx, eyy, exy.
         units : 'string', default='Metric'
             Units used to calculate strains, pixels or metric.
 
@@ -761,9 +806,15 @@ class DIC_2D(object):
             sigma = np.where(data['sigma'].flatten() == -1.)
             if method.lower().startswith('p'):
                 if units.lower().startswith('p'):
-                    disp_data = np.dstack((data['x'].flatten(), data['y'].flatten(), data['u'].flatten(), data['v'].flatten()))[0]
+                    disp_data = np.dstack((data['x'].flatten(),
+                                          data['y'].flatten(),
+                                          data['u'].flatten(),
+                                          data['v'].flatten()))[0]
                 else:
-                    disp_data = np.dstack((data['x_c'].flatten(), data['y_c'].flatten(), data['u_c'].flatten(), data['v_c'].flatten()))[0]
+                    disp_data = np.dstack((data['x_c'].flatten(),
+                                          data['y_c'].flatten(),
+                                          data['u_c'].flatten(),
+                                          data['v_c'].flatten()))[0]
 
                 disp_data = np.delete(disp_data, sigma, axis=0)
 
@@ -775,7 +826,9 @@ class DIC_2D(object):
 
                 strains.append([dudx, dvdy, (dvdx + dudy)/2])
             else:
-                strain_data = np.dstack((data['exx'].flatten(), data['eyy'].flatten(), data['exy'].flatten()))[0]
+                strain_data = np.dstack((data['exx'].flatten(),
+                                        data['eyy'].flatten(),
+                                        data['exy'].flatten()))[0]
                 strain_data = np.delete(strain_data, sigma, axis=0)
 
                 strains.append(np.mean(strain_data, axis=0))
@@ -796,8 +849,10 @@ class DIC_2D(object):
         """
         for filename in os.listdir(self.path):
             if filename.endswith('.dat'):
-                data = np.loadtxt(os.path.join(self.path, filename), skiprows=3)[:, [3, 2]] #[Time(s), Load (N)]
-                data[:, 0] = data[:, 0] + get_t_start(os.path.join(self.path, filename))
+                data = np.loadtxt(os.path.join(self.path, filename),
+                                  skiprows=3)[:, [3, 2]]  # [Time(s), Load (N)]
+                data[:, 0] = data[:, 0] + get_t_start(os.path.join(self.path,
+                                                      filename))
 
         img_times = [os.path.getmtime(file) for file in self.img]
         load = [data[nearest(data[:, 0], img_t), 1] for img_t in img_times]
@@ -818,7 +873,9 @@ class DIC_2D(object):
         """
         for filename in os.listdir(self.path):
             if filename.endswith('.dat'):
-                data = np.loadtxt(os.path.join(self.path, filename), skiprows=1) #[Data Point, Disp (mm), Load (N), Time (s)]
+                data = np.loadtxt(os.path.join(self.path, filename),
+                                  skiprows=1)
+            # [Data Point, Disp (mm), Load (N), Time (s)]
 
         mat_numbs = get_mat_numbs(self.mat, version='2D')
         load = data[mat_numbs, 2]
@@ -847,8 +904,12 @@ class DIC_2D(object):
 
         data = mat[var]
         sigma = mat['sigma']
-        if var.startswith('u') or var.startswith('v') or var.startswith('u_c') or var.startswith('v_c'):
-            data = data - np.mean(np.delete(data.flatten(), np.where(sigma.flatten() == -1.)))
+        if any(var.startswith('u'),
+               var.startswith('v'),
+               var.startswith('u_c'),
+               var.startswith('v_c')):
+            data = data - np.mean(np.delete(data.flatten(),
+                                  np.where(sigma.flatten() == -1.)))
         data[sigma == -1.] = np.nan
 
         if coordinates.lower().startswith('p'):
@@ -871,7 +932,14 @@ class DIC_2D(object):
 
         return x, y, data
 
-    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_other=18, fontsize_colorbar=21, figsize=6, resolution=300, showfig=True, filename=None):
+    def contour_overlay(self, frame, var, xlim=None, ylim=None, zlim=None,
+                        major_spacing=None, minor_spacing=None,
+                        contour_width=1, contour_color='k', opacity=1.,
+                        colorbar_on=True, colorbar_location='right',
+                        colorbar_label=None, colorbar_lines=True,
+                        colorbar_ticks=None, colormap=None, font='Arial',
+                        fontsize_other=18, fontsize_colorbar=21, figsize=6,
+                        resolution=300, showfig=True, filename=None):
         """
         Parameters
         ----------
@@ -903,7 +971,8 @@ class DIC_2D(object):
         fontsize_axes : 'Int'
             Font size to be used for axes labels.
         fontsize_other : 'Int'
-            Font size to be used for all other text (legend, axis numbers, etc.).
+            Font size to be used for all other text (legend, axis numbers,
+            etc.).
         fontsize_colorbar : 'Int'
             Font size to be used for colorbar label.
         figsize : 'Tuple', default = '(8,6)'
@@ -917,7 +986,8 @@ class DIC_2D(object):
 
         Returns
         ----------
-        Plot (x, y, z) arrays in 'data' as contours overlaid on top of DIC image.
+        Plot (x, y, z) arrays in 'data' as contours overlaid on top of DIC
+        image.
         """
         image = misc.imread(self.img[frame])
         ymax, xmax = image.shape[:2]
@@ -947,8 +1017,10 @@ class DIC_2D(object):
             if minor_spacing is None:
                 minor_spacing = major_spacing/10
 
-            cl_levels = np.arange(zlim[0], zlim[1] + major_spacing, major_spacing)
-            cf_levels = np.arange(zlim[0], zlim[1] + minor_spacing, minor_spacing)
+            cl_levels = np.arange(zlim[0], zlim[1] + major_spacing,
+                                  major_spacing)
+            cf_levels = np.arange(zlim[0], zlim[1] + minor_spacing,
+                                  minor_spacing)
 
             if colorbar_ticks is None:
                 l_levels = cl_levels[::2]
@@ -965,10 +1037,12 @@ class DIC_2D(object):
 
         mplt.imshow(image, cmap=mplt.cm.gray, extent=[0, xmax, 0, ymax])
 
-        cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels, extend='both', antialiased=True)
+        cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels,
+                           extend='both', antialiased=True)
 
         if contour_color is not None:
-            cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,), linewidths=(contour_width,))
+            cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,),
+                              linewidths=(contour_width,))
 
         if colormap is not None:
             cf.set_cmap(colormap)
@@ -987,9 +1061,13 @@ class DIC_2D(object):
 
         if colorbar_on:
             divider = make_axes_locatable(axis)
-            caxis = divider.append_axes(colorbar_location, size=cbar_size, pad=0.1)
+            caxis = divider.append_axes(colorbar_location, size=cbar_size,
+                                        pad=0.1)
 
-            cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis, orientation=orientation, ticklocation=colorbar_location)
+            cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis,
+                                 orientation=orientation,
+                                 ticklocation=colorbar_location)
+
             cbar.ax.tick_params(labelsize=fontsize_other)
 
             if colorbar_label is not None:
@@ -1001,7 +1079,8 @@ class DIC_2D(object):
         fig.tight_layout()
 
         if filename is not None:
-            mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+            mplt.savefig(filename, dpi=resolution, transparent=True,
+                         bbox_inches='tight')
 
         if showfig:
             mplt.show()

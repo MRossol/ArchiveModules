@@ -1,20 +1,17 @@
+import os
+import numpy as np
+import copy
+import cv2
+
 __author__ = 'MNR'
 
 __all__ = ['fit_line', 'img_process', 'delete_duplicates']
 
-import os
-from scipy import misc
-from scipy import ndimage
-import numpy as np
-import copy
-import cv2
-from skimage import morphology
-
 
 def fit_line(data):
     assert data.shape[1] == 2, "Data is not an nx2 array."
-    x=data[:,0]
-    y=data[:,1]
+    x = data[:, 0]
+    y = data[:, 1]
     A = np.vstack([x, np.ones(len(y))]).T
     return np.linalg.lstsq(A, y)[0]
 
@@ -26,13 +23,19 @@ class img_process(object):
 
     def threshold(self, thresh=None):
         if thresh is None:
-            (t_ref, b_img) = cv2.threshold(self.img, 0, 1, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+            (t_ref, b_img) = cv2.threshold(self.img, 0, 1,
+                                           cv2.THRESH_BINARY_INV |
+                                           cv2.THRESH_OTSU)
             self.thresh = t_ref
         elif isinstance(thresh, tuple):
-            b_img = cv2.adaptiveThreshold(self.img, 1 , cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, thresh[0], thresh[1])
+            b_img = cv2.adaptiveThreshold(self.img, 1,
+                                          cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                          cv2.THRESH_BINARY_INV, thresh[0],
+                                          thresh[1])
         else:
             img_max = np.max(self.img)
-            b_img = cv2.threshold(self.img, thresh, img_max, cv2.THRESH_BINARY_INV)[1]
+            b_img = cv2.threshold(self.img, thresh, img_max,
+                                  cv2.THRESH_BINARY_INV)[1]
             b_img[b_img == img_max] = 1
 
         self.img_b = b_img

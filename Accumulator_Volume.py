@@ -1,7 +1,3 @@
-__author__ = 'Michael Rossol'
-
-__all__ = ['extract_DIC_numb', 'DIC_P', 'img_numb', 'get_h', 'PV_werror', 'sphere_fit', 'hemisphere_PV', 'cap_PV', 'DIC_PV', 'paraboloid_PV', 'p_integrate_PV', 'get_lines', 'get_all_lines', 'get_shifts', 'contour_overlay']
-
 import numpy as np
 import scipy as sc
 import scipy.optimize
@@ -14,6 +10,15 @@ import numpy.ma as ma
 import matplotlib as mpl
 import matplotlib.pyplot as mplt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+
+__author__ = 'Michael Rossol'
+
+
+__all__ = ['extract_DIC_numb', 'DIC_P', 'img_numb', 'get_h', 'PV_werror',
+           'sphere_fit', 'hemisphere_PV', 'cap_PV', 'DIC_PV', 'paraboloid_PV',
+           'p_integrate_PV', 'get_lines', 'get_all_lines', 'get_shifts',
+           'contour_overlay']
 
 
 def extract_DIC_numb(file):
@@ -55,8 +60,9 @@ def DIC_P(data_path, DIC_data, t_shift=None, KPa=False):
     if t_shift is not None:
         t_p = t_p + [t_shift, 0]
 
-    img_t = data[1:, 2:]/[1,1000]
-    img_t = np.asarray([np.mean(img_t[img_t[:, 0] == img], axis=0) for img in np.unique(img_t[:, 0])])
+    img_t = data[1:, 2:]/[1, 1000]
+    img_t = np.asarray([np.mean(img_t[img_t[:, 0] == img], axis=0) for img in
+                       np.unique(img_t[:, 0])])
     img_t_interp = scipy.interpolate.interp1d(img_t[:, 0], img_t[:, 1])
 
     imgs = [extract_DIC_numb(file) for file in DIC_data.mat]
@@ -147,7 +153,8 @@ def get_h(DIC_data, method='fit', z_shift=None):
 
             coords = np.vstack((Xi, Yi, Zi))
 
-            (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords,))
+            (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0,
+                                                           args=(coords,))
 
             h = R + z0
 
@@ -163,7 +170,8 @@ def get_h(DIC_data, method='fit', z_shift=None):
 
 def PV_werror(DIC_data, pressure, step=None, z_shift=None):
     """
-    Extract accumulator volume as function of pressure with error in volume calculation
+    Extract accumulator volume as function of pressure with error in volume
+    calculation
     Parameters
     ----------
     DIC_data : 'instance'
@@ -224,13 +232,14 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
 
         coords = np.vstack((Xi, Yi, Zi))
 
-        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords, ))
+        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0,
+                                                       args=(coords, ))
 
         h = R + z0
 
         a_h = np.sqrt(h*(2*R - h))
 
-        if np.isnan(a_h) or a_h > a0 * 1.25 or z0>  0:
+        if np.isnan(a_h) or a_h > a0 * 1.25 or z0 > 0:
             V = np.nan
             dV = np.nan
         else:
@@ -243,9 +252,11 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
             yrange = np.arange(Yi.min(), Yi.max() + step, step)
 
             grid_x, grid_y = np.meshgrid(xrange, yrange)
-            grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y), method='linear')
+            grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y),
+                                                method='linear')
 
-            xyz = np.dstack((grid_x.flatten(), grid_y.flatten(), grid_z.flatten()))[0]
+            xyz = np.dstack((grid_x.flatten(), grid_y.flatten(),
+                            grid_z.flatten()))[0]
             xyz = xyz[~np.isnan(xyz[:, 2])]
 
             def h_z(xy):
@@ -328,7 +339,8 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
 
         coords = np.vstack((Xi, Yi, Zi))
 
-        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords, ))
+        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0,
+                                                       args=(coords, ))
 
         h = R + z0
 
@@ -345,9 +357,11 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
             yrange = np.arange(Yi.min(), Yi.max() + step, step)
 
             grid_x, grid_y = np.meshgrid(xrange, yrange)
-            grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y), method='linear')
+            grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y),
+                                                method='linear')
 
-            xyz = np.dstack((grid_x.flatten(), grid_y.flatten(), grid_z.flatten()))[0]
+            xyz = np.dstack((grid_x.flatten(), grid_y.flatten(),
+                            grid_z.flatten()))[0]
             xyz = xyz[~np.isnan(xyz[:, 2])]
 
             def h_z(xy):
@@ -425,7 +439,8 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
 
         coords = np.vstack((Xi, Yi, Zi))
 
-        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords, ))
+        (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0,
+                                                       args=(coords, ))
 
         h = R + z0
 
@@ -452,7 +467,8 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
 
 def cap_PV(DIC_data, pressure, a):
     """
-    Extract accumulator volume as function of pressure using hemispherical cap equation
+    Extract accumulator volume as function of pressure using hemispherical cap
+    equation
     Parameters
     ----------
     DIC_data : 'instance'
@@ -539,7 +555,8 @@ def DIC_PV(DIC_data, pressure, step=0.01, method='linear', z_shift=None):
         yrange = np.arange(Yi.min(), Yi.max() + step, step)
 
         grid_x, grid_y = np.meshgrid(xrange, yrange)
-        grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y), method=method)
+        grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y),
+                                            method=method)
 
         volume.append(np.nansum(grid_z)*step**2)
 
@@ -548,7 +565,8 @@ def DIC_PV(DIC_data, pressure, step=0.01, method='linear', z_shift=None):
 
 def paraboloid_PV(DIC_data, pressure, z_shift=None):
     """
-    Extract accumulator volume as function of pressure using parabolic fit and parabolic cap equation
+    Extract accumulator volume as function of pressure using parabolic fit and
+    parabolic cap equation
     Parameters
     ----------
     DIC_data : 'instance'
@@ -598,22 +616,28 @@ def paraboloid_PV(DIC_data, pressure, z_shift=None):
         params = np.linalg.lstsq(A, Zi)[0]
 
         def ifit(x):
-            return -1*(params[0]*x[0]**2 + params[1]*x[0] + params[2]*x[1]**2 + params[3]*x[1] + params[4])
+            return (params[0]*x[0]**2 + params[1]*x[0] +
+                    params[2]*x[1]**2 + params[3]*x[1] + params[4])*-1
 
         xo, yo = sc.optimize.fmin(ifit, np.array([0, 0]), disp=False)
 
-        if xo > x_lims[1] or xo < x_lims[0] or yo > y_lims[1] or yo < y_lims[0]:
+        if any(xo > x_lims[1], xo < x_lims[0], yo > y_lims[1],
+               yo < y_lims[0]):
             xo = 0
             yo = 0
 
         else:
             def xzfit(x):
-                return params[0]*x**2 + params[1]*x + params[2]*yo**2 + params[3]*yo + params[4]
-            x_lims = [sc.optimize.fsolve(xzfit, x_lims[0]), sc.optimize.fsolve(xzfit, x_lims[1])]
+                return (params[0]*x**2 + params[1]*x + params[2]*yo**2 +
+                        params[3]*yo + params[4])
+            x_lims = [sc.optimize.fsolve(xzfit, x_lims[0]),
+                      sc.optimize.fsolve(xzfit, x_lims[1])]
 
             def yzfit(y):
-                return params[0]*xo**2 + params[1]*xo + params[2]*y**2 + params[3]*y + params[4]
-            y_lims = [sc.optimize.fsolve(yzfit, y_lims[0]), sc.optimize.fsolve(yzfit, y_lims[1])]
+                return (params[0]*xo**2 + params[1]*xo + params[2]*y**2 +
+                        params[3]*y + params[4])
+            y_lims = [sc.optimize.fsolve(yzfit, y_lims[0]),
+                      sc.optimize.fsolve(yzfit, y_lims[1])]
 
             ao = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
 
@@ -629,7 +653,8 @@ def paraboloid_PV(DIC_data, pressure, z_shift=None):
 
 def p_integrate_PV(DIC_data, pressure, z_shift=None):
     """
-    Extract accumulator volume as function of pressure using intergration of parabolic fit equation
+    Extract accumulator volume as function of pressure using intergration of
+    parabolic fit equation
     Parameters
     ----------
     DIC_data : 'instance'
@@ -668,7 +693,8 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
         params = np.linalg.lstsq(A, Zi)[0]
 
         def ifit(x):
-            return -1*(params[0]*x[0]**2 + params[1]*x[0] + params[2]*x[1]**2 + params[3]*x[1] + params[4])
+            return (-1*(params[0]*x[0]**2 + params[1]*x[0] + params[2]*x[1]**2
+                    + params[3]*x[1] + params[4]))
 
         xo, yo = sc.optimize.fmin(ifit, np.array([0, 0]), disp=False)
         x_range = [X.min(), X.max()]
@@ -685,21 +711,33 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
             V = (1/2)*np.pi*a**2*h
         else:
             def xzfit(x):
-                return params[0]*x**2 + params[1]*x + params[2]*yo**2 + params[3]*yo + params[4]
-            x_lims = [sc.optimize.fsolve(xzfit, x_range[0]), sc.optimize.fsolve(xzfit, x_range[1])]
+                return (params[0]*x**2 + params[1]*x + params[2]*yo**2 +
+                        params[3]*yo + params[4])
+            x_lims = [sc.optimize.fsolve(xzfit, x_range[0]),
+                      sc.optimize.fsolve(xzfit, x_range[1])]
 
             def yzfit(y):
-                return params[0]*xo**2 + params[1]*xo + params[2]*y**2 + params[3]*y + params[4]
-            y_lims = [sc.optimize.fsolve(yzfit, y_range[0]), sc.optimize.fsolve(yzfit, y_range[1])]
+                return (params[0]*xo**2 + params[1]*xo + params[2]*y**2 +
+                        params[3]*y + params[4])
 
-            if np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2 > (np.mean((x_range[1] - x_range[0], y_range[1] - y_range[0]))/2)*1.25:
+            y_lims = [sc.optimize.fsolve(yzfit, y_range[0]),
+                      sc.optimize.fsolve(yzfit, y_range[1])]
+
+            if (np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2 >
+               (np.mean((x_range[1] - x_range[0],
+               y_range[1] - y_range[0]))/2)*1.25):
 
                 y_lims = y_range
 
             xf, yf = sp.symbols('xf yf')
-            sols = sp.solve(params[0]*xf**2 + params[1]*xf + params[2]*yf**2 + params[3]*yf + params[4], xf)
+            sols = sp.solve(params[0]*xf**2 + params[1]*xf + params[2]*yf**2 +
+                            params[3]*yf + params[4], xf)
 
-            V = sc.integrate.dblquad(lambda x, y: params[0]*x**2 + params[1]*x + params[2]*y**2 + params[3]*y + params[4], y_lims[0], y_lims[1], lambda x: sols[0].subs(yf, x), lambda x: sols[1].subs(yf, x))[0]
+            V = sc.integrate.dblquad(lambda x, y: params[0]*x**2 + params[1]*x
+                                     + params[2]*y**2 + params[3]*y +
+                                     params[4], y_lims[0], y_lims[1],
+                                     lambda x: sols[0].subs(yf, x),
+                                     lambda x: sols[1].subs(yf, x))[0]
 
         volume.append(V)
 
@@ -763,7 +801,8 @@ def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     def h_fit(x):
         return np.sqrt(R**2 - (x-x0)**2) + z0
 
-    hemi_line = np.dstack((np.arange(-a, a+.1, 0.1), h_fit(np.arange(-a, a+.1, 0.1))))[0]
+    hemi_line = np.dstack((np.arange(-a, a + 0.1, 0.1),
+                          h_fit(np.arange(-a, a + 0.1, 0.1))))[0]
 
     h = DIC_line[:, 1].max()
     r = (a**2 + h**2)/(2*h)
@@ -771,7 +810,8 @@ def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     def cap(x):
         return np.sqrt(r**2 - x**2) + (h - r)
 
-    cap_line = np.dstack((np.arange(-a, a+.1, 0.1), cap(np.arange(-a, a+.1, 0.1))))[0]
+    cap_line = np.dstack((np.arange(-a, a + 0.1, 0.1),
+                         cap(np.arange(-a, a + 0.1, 0.1))))[0]
 
     return DIC_line, hemi_line, cap_line
 
@@ -796,7 +836,8 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
 
     Returns
     -------
-        Arrays of [x, z] for DIC_data, hemisphere_fit, hemisphere_cap, parabolic_fit
+        Arrays of [x, z] for DIC_data, hemisphere_fit, hemisphere_cap,
+        parabolic_fit
     """
     data = DIC_data.get_data(frame)
     sigma = data['sigma']
@@ -833,7 +874,8 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     def h_fit(x):
         return np.sqrt(R**2 - (x-x0)**2) + z0
 
-    hemi_line = np.dstack((np.arange(-a, a+.1, 0.1), h_fit(np.arange(-a, a+.1, 0.1))))[0]
+    hemi_line = np.dstack((np.arange(-a, a+.1, 0.1),
+                          h_fit(np.arange(-a, a + 0.1, 0.1))))[0]
 
     h = DIC_line[:, 1].max()
     r = (a**2 + h**2)/(2*h)
@@ -841,15 +883,18 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     def cap(x):
         return np.sqrt(r**2 - x**2) + (h - r)
 
-    cap_line = np.dstack((np.arange(-a, a+.1, 0.1), cap(np.arange(-a, a+.1, 0.1))))[0]
+    cap_line = np.dstack((np.arange(-a, a + 0.1, 0.1),
+                         cap(np.arange(-a, a + 0.1, 0.1))))[0]
 
     A = np.vstack([X**2, X, Y**2, Y, np.ones(len(Zi))]).T
     params = np.linalg.lstsq(A, Zi)[0]
 
     def p_fit(x, y):
-        return (params[0]*x**2 + params[1]*x + params[2]*y**2 + params[3]*y + params[4])
+        return (params[0]*x**2 + params[1]*x + params[2]*y**2 + params[3]*y +
+                params[4])
 
-    para_line = np.dstack((np.arange(-a, a+.1, 0.1), p_fit(np.arange(-a, a+.1, 0.1), 0)))[0]
+    para_line = np.dstack((np.arange(-a, a + 0.1, 0.1),
+                          p_fit(np.arange(-a, a + 0.1, 0.1), 0)))[0]
 
     return DIC_line, hemi_line, cap_line, para_line
 
@@ -909,7 +954,14 @@ def get_shifts(DIC_data, frame=-1, z_shift=None):
     return x0, y0, Zo
 
 
-def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_other=18, fontsize_colorbar=21, figsize=6, resolution=300, showfig=True, filename=None):
+def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None,
+                    zlim=None, major_spacing=None, minor_spacing=None,
+                    contour_width=1, contour_color='k', opacity=1.,
+                    colorbar_on=True, colorbar_location='right',
+                    colorbar_label=None, colorbar_lines=True,
+                    colorbar_ticks=None, colormap=None, font='Arial',
+                    fontsize_other=18, fontsize_colorbar=21, figsize=6,
+                    resolution=300, showfig=True, filename=None):
     """
     Plot (x, y, z) arrays in 'data' as contours overlaid on top of DIC image.
     Parameters
@@ -1024,10 +1076,12 @@ def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=No
 
     mplt.imshow(image, cmap=mplt.cm.gray, extent=[0, xmax, 0, ymax])
 
-    cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels, extend='both')
+    cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels,
+                       extend='both')
 
     if contour_color is not None:
-        cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,), linewidths=(contour_width,))
+        cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color, ),
+                          linewidths=(contour_width, ))
 
     if colormap is not None:
         cf.set_cmap(colormap)
@@ -1048,7 +1102,9 @@ def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=No
         divider = make_axes_locatable(axis)
         caxis = divider.append_axes(colorbar_location, size=cbar_size, pad=0.1)
 
-        cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis, orientation=orientation, ticklocation=colorbar_location)
+        cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis,
+                             orientation=orientation,
+                             ticklocation=colorbar_location)
         cbar.ax.tick_params(labelsize=fontsize_other)
 
         if colorbar_label is not None:
@@ -1060,7 +1116,8 @@ def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None, zlim=No
     fig.tight_layout()
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()

@@ -1,14 +1,22 @@
-__author__ = 'Michael N Rossol'
-
-__all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle", "line_plot", "dual_plot", "error_plot", "contour_plot", "surface_plot", "colorbar"]
+"""Package of custom plotting functions"""
 
 import itertools
 import matplotlib as mpl
 import matplotlib.pyplot as mplt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import copy
+import pandas as pd
 import numpy as np
 import numpy.ma as ma
+
+
+__author__ = 'Michael N Rossol'
+
+
+__all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle",
+           "line_plot", "dual_plot", "error_plot", "contour_plot",
+           "surface_plot", "colorbar"]
+
 
 COLORS = {
     "red": (0.7176, 0.1098, 0.1098),
@@ -43,7 +51,8 @@ def get_COLORS(colors, n=None):
     return [COLORS[color] for color in colors]
 
 def_linestyles = ('-', '--', '-.', ':')
-def_markers = (u'o', u'v', u'^', u'<', u'>', u'8', u's', u'p', u'*', u'h', u'H', u'D', u'd')
+def_markers = (u'o', u'v', u'^', u'<', u'>', u'8', u's', u'p', u'*', u'h',
+               u'H', u'D', u'd')
 
 
 def riffle(*args):
@@ -59,7 +68,12 @@ def riffle(*args):
     return [item for sublist in zip(*args) for item in sublist]
 
 
-def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2), colors=None, linestyles='Automatic', linewidth=2, markers=None, markersize=5, font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2, add_legend=None, legend_location=0, figsize=(8, 6), resolution=300, showfig=True, filename=None):
+def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
+              xticks=None, yticks=None, ticksize=(8, 2), colors=None,
+              linestyles='Automatic', linewidth=2, markers=None, markersize=5,
+              font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
+              add_legend=None, legend_location=0, figsize=(8, 6),
+              resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -74,24 +88,31 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None,
     ylim : 'array-like', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'array-like'
-        List of ticks to use on the x-axis. Should be within the bounds set by xlim.
+        List of ticks to use on the x-axis. Should be within the bounds set by
+        xlim.
     yticks : 'array-like'
-        List of ticks to use on the y-axis. Should be within the bound set by ylim.
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
     ticksize : 'array-like', default '[8,2]'
         Length and width of ticks.
     colors : 'array-like'
         Iterable list of colors to plot for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     linestyles : 'array-like'
-        Iterable list of Matplotlib designations for the linestyle for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the linestyle for each
+        line in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
     markers : 'array-like'
-        Iterable list of Matplotlib designations for the marker for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the marker for each line
+        in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     font : 'String'
         Font to be used.
     fontsize_axes : 'Int'
@@ -154,7 +175,9 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None,
     axis = fig.add_subplot(111)
 
     for line in lines:
-        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors), linestyle=next(linestyles))
+        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth,
+                  markersize=markersize, marker=next(markers),
+                  color=next(colors), linestyle=next(linestyles))
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -175,7 +198,8 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None,
     if ylim is not None:
         axis.set_ylim(ylim)
 
-    axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0])
+    axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1],
+                     length=ticksize[0])
 
     if xticks is not None:
         axis.set_xticks(xticks)
@@ -189,13 +213,158 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None,
     fig.tight_layout()
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()
 
 
-def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2), axis_colors='k', colors=None, linestyles='Automatic', linewidth=2, markersize=5, markers=None, font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2, add_legend=None, legend_location=0,figsize=(8, 6), resolution=300, showfig=True, filename=None):
+def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
+              ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
+              colors=None, orientation='vertical', font='Arial',
+              fontsize_axes=21, fontsize_other=18, borderwidth=2,
+              add_legend=None, legend_location=0, figsize=(8, 6),
+              resolution=300, showfig=True, filename=None):
+    """
+    Parameters
+    ----------
+    data : 'pandas Series or DataFrame',
+        Either a pandas Series or DataFrame. Bars are values, xlabels are
+        indeces.
+    bar_gap : 'float'
+        Spacing between bars as percentage of full width
+    xlabel : 'String'
+        Label for x-axis.
+    ylabel : 'String'
+        Label for y-axis.
+    xlim : 'array-like', len(xlim) == 2
+        Upper and lower limits for the x-axis.
+    ylim : 'array-like', len(ylim) == 2
+        Upper and lower limits for the y-axis.
+    xticks : 'array-like'
+        List of ticks to use on the x-axis. Default is the index of the Series
+        or DataFrame.
+    yticks : 'array-like'
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
+    ticksize : 'array-like', default '[8,2]'
+        Length and width of ticks.
+    colors : 'array-like'
+        Iterable list of colors to plot for each line in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
+    font : 'String'
+        Font to be used.
+    fontsize_axes : 'Int'
+        Font size to be used for axes labels.
+    fontsize_other : 'Int'
+        Font size to be used for all other text (legend, axis numbers, etc.).
+    boarderwidth : 'Int'
+        Linewidth of plot frame
+    add_legend : 'Bool', default = 'False'
+        If 'True' a legend will be added at 'legendlocation'.
+    legend_location : 'String' or 'Int', default = '0'
+        Matplotlib designator for legend location, default is 'best'.
+    figsize : 'Tuple', default = '(8,6)'
+        Width and height of figure
+    resolution : 'Int', default = '300'
+        DPI resolution of figure.
+    showfig : 'Bool', default = 'True'
+        Whether to show figure.
+    filename : 'String', default = None.
+        Name of file/path to save the figure to.
+
+    Returns
+    -------
+    Plots a bar chart from the Series or DataFrame in 'data'.
+    """
+
+    if isinstance(data, pd.Series):
+        bars = (data,)
+    else:
+        bars = [data[col].values for col in data.columns]
+
+    xs = np.arange(len(data))
+
+    if colors is not None:
+        colors = itertools.cycle(colors)
+    else:
+        colors = itertools.cycle((COLORS["blue"],
+                                  COLORS["green"],
+                                  COLORS["red"],
+                                  COLORS["orange"],
+                                  COLORS["purple"],
+                                  COLORS["grey"],
+                                  COLORS["cyan"],
+                                  COLORS["teal"],
+                                  COLORS["lime"],
+                                  COLORS["brown"]))
+
+    bar_width = (1 - bar_gap*2)/len(bars)
+    s_width = bar_gap
+    c_shift = 0.5
+
+    fig = mplt.figure(figsize=figsize, dpi=resolution)
+    axis = fig.add_subplot(111)
+
+    for i, yheight in enumerate(bars):
+        axis.bar(xs+s_width + bar_width*i, yheight, bar_width,
+                 color=next(colors), orientation=orientation)
+
+    mpl.rcParams['font.sans-serif'] = font
+    mpl.rcParams['pdf.fonttype'] = 42
+
+    # update plot labels and format based on user input
+    for ax in ['top', 'bottom', 'left', 'right']:
+        axis.spines[ax].set_linewidth(borderwidth)
+
+    if xlabel is not None:
+        axis.set_xlabel(xlabel, fontsize=fontsize_axes)
+
+    if ylabel is not None:
+        axis.set_ylabel(ylabel, fontsize=fontsize_axes)
+
+    if xlim is None:
+        axis.set_xlim(xs[0], xs[-1] + 1)
+    else:
+        axis.set_xlim(xlim)
+
+    if ylim is not None:
+        axis.set_ylim(ylim)
+
+    axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1],
+                     length=ticksize[0])
+
+    axis.set_xticks(xs + c_shift)
+
+    if xticks is None:
+        axis.set_xticklabels(data.index, rotation=orientation)
+    else:
+        axis.set_xticklabels(xticks, rotation=orientation)
+
+    if yticks is not None:
+        axis.set_yticks(yticks)
+
+    if add_legend is not None:
+        mplt.legend(add_legend, prop={'size': 12}, loc=legend_location)
+
+    fig.tight_layout()
+
+    if filename is not None:
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
+
+    if showfig:
+        mplt.show()
+
+
+def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
+              xticks=None, yticks=None, ticksize=(8, 2), axis_colors='k',
+              colors=None, linestyles='Automatic', linewidth=2, markersize=5,
+              markers=None, font='Arial', fontsize_axes=21, fontsize_other=18,
+              borderwidth=2, add_legend=None, legend_location=0,
+              figsize=(8, 6), resolution=300, showfig=True, filename=None):
     """
 
     Parameters
@@ -213,25 +382,33 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xtic
     ylim : 'array-like', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'array-like'
-        List of ticks to use on the x-axis. Should be within the bounds set by xlim.
+        List of ticks to use on the x-axis. Should be within the bounds set by
+        xlim.
     yticks : 'array-like'
-        List of ticks to use on the y-axis. Should be within the bound set by ylim.
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
     ticksize : 'array-like', default '[8,2]'
         Length and width of ticks.
     axis_colors : 'string', 'tuple'
-        string indicating y-axis colors, tuple of strings indicates color of each y-axis
+        string indicating y-axis colors, tuple of strings indicates color of
+        each y-axis
     colors : 'array-like'
         Iterable list of colors to plot for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     linestyles : 'array-like'
-        Iterable list of Matplotlib designations for the linestyle for each line in 'data'. Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the linestyle for each
+        line in 'data'. Will be cycled if fewer entries are specified than the
+        number of lines in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
     markers : 'array-like'
-        Iterable list of Matplotlib designations for the marker for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the marker for each line
+        in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     font : 'String'
         Font to be used.
     fontsize_axes : 'Int'
@@ -326,12 +503,16 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xtic
     axis1 = fig.add_subplot(111)
 
     for line in lines1:
-        axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers1), color=next(colors1), linestyle=next(linestyles1))
+        axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth,
+                   markersize=markersize, marker=next(markers1),
+                   color=next(colors1), linestyle=next(linestyles1))
 
     axis2 = axis1.twinx()
 
     for line in lines2:
-        axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth, markersize=markersize, marker=next(markers2), color=next(colors2), linestyle=next(linestyles2))
+        axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth,
+                   markersize=markersize, marker=next(markers2),
+                   color=next(colors2), linestyle=next(linestyles2))
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -349,8 +530,10 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xtic
             axis1.set_ylabel(ylabel, fontsize=fontsize_axes, color=axis_color1)
             axis2.set_ylabel(ylabel, fontsize=fontsize_axes, color=axis_color2)
         else:
-            axis1.set_ylabel(ylabel[0], fontsize=fontsize_axes, color=axis_color1)
-            axis2.set_ylabel(ylabel[1], fontsize=fontsize_axes, color=axis_color2)
+            axis1.set_ylabel(ylabel[0], fontsize=fontsize_axes,
+                             color=axis_color1)
+            axis2.set_ylabel(ylabel[1], fontsize=fontsize_axes,
+                             color=axis_color2)
 
     if xlim is not None:
         axis1.set_xlim(xlim)
@@ -374,9 +557,12 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xtic
             axis1.set_set_yticks(yticks[0])
             axis2.set_set_yticks(yticks[1])
 
-    axis1.tick_params(axis='x', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0], color='k')
-    axis1.tick_params(axis='y', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0], color=axis_color1)
-    axis2.tick_params(axis='y', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0], color=axis_color2)
+    axis1.tick_params(axis='x', labelsize=fontsize_other, width=ticksize[1],
+                      length=ticksize[0], color='k')
+    axis1.tick_params(axis='y', labelsize=fontsize_other, width=ticksize[1],
+                      length=ticksize[0], color=axis_color1)
+    axis2.tick_params(axis='y', labelsize=fontsize_other, width=ticksize[1],
+                      length=ticksize[0], color=axis_color2)
 
     if len(axis_colors) == 2:
         for tl in axis1.get_yticklabels():
@@ -390,13 +576,20 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None, xtic
     fig.tight_layout()
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()
 
 
-def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None, yticks=None, ticksize=(8, 2), colors=None, linestyles=None, linewidth=2, markersize=5, markers='Automatic', font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2, add_legend=None, legend_location=0, figsize=(8, 6), resolution=300, showfig=True, filename=None):
+def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
+               xticks=None, yticks=None, ticksize=(8, 2), colors=None,
+               linestyles=None, linewidth=2, markersize=5,
+               markers='Automatic', font='Arial', fontsize_axes=21,
+               fontsize_other=18, borderwidth=2, add_legend=None,
+               legend_location=0, figsize=(8, 6), resolution=300,
+               showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -412,24 +605,31 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None
     ylim : 'array-like', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'array-like'
-        List of ticks to use on the x-axis. Should be within the bounds set by xlim.
+        List of ticks to use on the x-axis. Should be within the bounds set by
+        xlim.
     yticks : 'array-like'
-        List of ticks to use on the y-axis. Should be within the bound set by ylim.
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
     ticksize : 'array-like', default '[8,2]'
         Length and width of ticks.
     colors : 'array-like'
         Iterable list of colors to plot for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     linestyles : 'array-like'
-        Iterable list of Matplotlib designations for the linestyle for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the linestyle for each
+        line in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     linewidth : 'Int'
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
     markers : 'array-like'
-        Iterable list of Matplotlib designations for the marker for each line in 'data'.
-        Will be cycled if fewer entries are specified than the number of lines in 'data'.
+        Iterable list of Matplotlib designations for the marker for each line
+        in 'data'.
+        Will be cycled if fewer entries are specified than the number of lines
+        in 'data'.
     font : 'String'
         Font to be used.
     fontsize_axes : 'Int'
@@ -506,7 +706,9 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None
         else:
             y_error = error
 
-        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth, markersize=markersize, marker=next(markers), color=next(colors), linestyle=next(linestyles))
+        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth,
+                      markersize=markersize, marker=next(markers),
+                      color=next(colors), linestyle=next(linestyles))
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -527,7 +729,8 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None
     if ylim is not None:
         axis.set_ylim(ylim)
 
-    axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0])
+    axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1],
+                     length=ticksize[0])
 
     if xticks is not None:
         axis.set_xticks(xticks)
@@ -541,13 +744,22 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None, xticks=None
     fig.tight_layout()
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()
 
 
-def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, minor_spacing=None, contour_width=1, contour_color='k', opacity=1., colorbar_on=True, colorbar_location='right', colorbar_label=None, colorbar_lines=True, colorbar_ticks=None, colormap=None, font='Arial', fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21, axis_on=False, xlabel=None, ylabel=None, xticks=None, yticks=None, ticksize=(8, 2), borderwidth=2, figsize=6, resolution=300, showfig=True, filename=None):
+def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
+                 minor_spacing=None, contour_width=1, contour_color='k',
+                 opacity=1., colorbar_on=True, colorbar_location='right',
+                 colorbar_label=None, colorbar_lines=True,
+                 colorbar_ticks=None, colormap=None, font='Arial',
+                 fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
+                 axis_on=False, xlabel=None, ylabel=None, xticks=None,
+                 yticks=None, ticksize=(8, 2), borderwidth=2, figsize=6,
+                 resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -590,9 +802,11 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, mino
     ylabel : 'String'
         Label for y-axis.
     xticks : 'array-like'
-        List of ticks to use on the x-axis. Should be within the bounds set by xlim.
+        List of ticks to use on the x-axis. Should be within the bounds set by
+        xlim.
     yticks : 'array-like'
-        List of ticks to use on the y-axis. Should be within the bound set by ylim.
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
     ticksize : 'array-like', default '[8,2]'
         Length and width of ticks.
     boarderwidth : 'Int'
@@ -661,10 +875,12 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, mino
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis = fig.add_subplot(111)
 
-    cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels, extend='both', antialiased=True)
+    cf = mplt.contourf(x, y, z_m, alpha=opacity, levels=cf_levels,
+                       extend='both', antialiased=True)
 
     if contour_color is not None:
-        cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,), linewidths=(contour_width,))
+        cl = mplt.contour(cf, levels=cl_levels, colors=(contour_color,),
+                          linewidths=(contour_width,))
 
     if colormap is not None:
         cf.set_cmap(colormap)
@@ -691,7 +907,8 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, mino
         if ylabel is not None:
             axis.set_ylabel(ylabel, fontsize=fontsize_axes)
 
-        axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0])
+        axis.tick_params(axis='both', labelsize=fontsize_other,
+                         width=ticksize[1], length=ticksize[0])
 
         if xticks is not None:
             axis.set_xticks(xticks)
@@ -716,9 +933,12 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, mino
     if colorbar_on:
         divider = make_axes_locatable(axis)
 
-        caxis = divider.append_axes(colorbar_location, size=cbar_size, pad=cbar_padding)
+        caxis = divider.append_axes(colorbar_location, size=cbar_size,
+                                    pad=cbar_padding)
 
-        cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis, orientation=orientation, ticklocation=colorbar_location)
+        cbar = mplt.colorbar(cf, ticks=l_levels, cax=caxis,
+                             orientation=orientation,
+                             ticklocation=colorbar_location)
 
         cbar.ax.tick_params(labelsize=fontsize_other)
 
@@ -732,13 +952,21 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None, mino
     fig.tight_layout()
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()
 
 
-def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Automatic', colorbar_on=True, colorbar_label=None, colorbar_ticks=None, colormap=None, font='Arial', fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21, axis_on=False, xlabel=None, ylabel=None, zlabel=None, xticks=None, yticks=None, zticks=None, ticksize=(8, 2), borderwidth=2, figsize=6, resolution=300, showfig=True, filename=None):
+def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
+                 box_ratio='Automatic', colorbar_on=True, colorbar_label=None,
+                 colorbar_ticks=None, colormap=None, font='Arial',
+                 fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
+                 axis_on=False, xlabel=None, ylabel=None, zlabel=None,
+                 xticks=None, yticks=None, zticks=None, ticksize=(8, 2),
+                 borderwidth=2, figsize=6, resolution=300, showfig=True,
+                 filename=None):
     """
     Parameters
     ----------
@@ -781,9 +1009,11 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
     ylabel : 'String'
         Label for y-axis.
     xticks : 'array-like'
-        List of ticks to use on the x-axis. Should be within the bounds set by xlim.
+        List of ticks to use on the x-axis. Should be within the bounds set by
+        xlim.
     yticks : 'array-like'
-        List of ticks to use on the y-axis. Should be within the bound set by ylim.
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
     ticksize : 'array-like', default '[8,2]'
         Length and width of ticks.
     boarderwidth : 'Int'
@@ -864,7 +1094,9 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis = fig.gca(projection='3d')
 
-    surf = axis.plot_surface(x, y, z_m, rstride=stride, cstride=stride, linewidth=0, antialiased=False, cmap=cmap, norm=norm)
+    surf = axis.plot_surface(x, y, z_m, rstride=stride, cstride=stride,
+                             linewidth=0, antialiased=False, cmap=cmap,
+                             norm=norm)
 
     axis.pbaspect = data_ratio
 
@@ -893,7 +1125,8 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
         if zlabel is not None:
             axis.set_zlabel(zlabel, fontsize=fontsize_axes)
 
-        axis.tick_params(axis='both', labelsize=fontsize_other, width=ticksize[1], length=ticksize[0])
+        axis.tick_params(axis='both', labelsize=fontsize_other,
+                         width=ticksize[1], length=ticksize[0])
 
         if xticks is not None:
             axis.set_xticks(xticks)
@@ -908,7 +1141,8 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
         axis.axis('off')
 
     if colorbar_on:
-        cbar = mplt.colorbar(surf, ticks=l_levels, orientation='vertical', ticklocation='right', shrink=1)
+        cbar = mplt.colorbar(surf, ticks=l_levels, orientation='vertical',
+                             ticklocation='right', shrink=1)
 
         cbar.ax.tick_params(labelsize=fontsize_other)
 
@@ -918,13 +1152,17 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1, box_ratio='Aut
     fig.tight_layout()
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()
 
 
-def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1, colormap=None, extend='neither', ticklocation='right', fontsize_other=18, label=None, fontsize_label=21, figsize=6, resolution=300, showfig=True, filename=None):
+def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
+             colormap=None, extend='neither', ticklocation='right',
+             fontsize_other=18, label=None, fontsize_label=21, figsize=6,
+             resolution=300, showfig=True, filename=None):
 
     """
     Parameters
@@ -986,7 +1224,9 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1, colormap
 
     norm = mpl.colors.Normalize(vmin=zlim[0], vmax=zlim[1])
 
-    cb = mpl.colorbar.ColorbarBase(axis, cmap=colormap, norm=norm, orientation=orientation, extend=extend, ticks=ticks, ticklocation=ticklocation)
+    cb = mpl.colorbar.ColorbarBase(axis, cmap=colormap, norm=norm,
+                                   orientation=orientation, extend=extend,
+                                   ticks=ticks, ticklocation=ticklocation)
     cb.ax.tick_params(labelsize=fontsize_other)
 
     if label is not None:
@@ -995,10 +1235,12 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1, colormap
     if lines is not None:
         lines = (zlim[1] - zlim[0])/lines
         lines = np.arange(zlim[0], zlim[1] + lines, lines)
-        cb.add_lines(lines, colors=(line_color,)*len(lines), linewidths=(linewidth,)*len(lines))
+        cb.add_lines(lines, colors=(line_color,)*len(lines),
+                     linewidths=(linewidth,)*len(lines))
 
     if filename is not None:
-        mplt.savefig(filename, dpi=resolution, transparent=True, bbox_inches='tight')
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
 
     if showfig:
         mplt.show()

@@ -1,11 +1,11 @@
-__author__ = 'MNR'
-
-__all__ = ['RGB_to_BW', 'AC', 'extract_AC', 'import_AC']
-
 import numpy as np
 from scipy import misc
 import scipy
 import scipy.io
+
+__author__ = 'MNR'
+
+__all__ = ['RGB_to_BW', 'AC', 'extract_AC', 'import_AC']
 
 
 def RGB_to_BW(img):
@@ -48,7 +48,9 @@ class AC(object):
 
         self.AC_2D = (xv, yv, cor)
 
-        dist = np.asarray([np.linalg.norm((x, y)) for x, y in zip(xv.reshape(-1), yv.reshape(-1))])
+        dist = np.asarray([np.linalg.norm((x, y))
+                          for x, y
+                          in zip(xv.reshape(-1), yv.reshape(-1))])
         img_AC = np.dstack((dist, cor.reshape(-1)))[0]
 
         img_AC = img_AC[img_AC[:, 0].argsort()]
@@ -92,15 +94,20 @@ class extract_AC(AC):
         xv, yv = np.meshgrid(offset_range, offset_range)
         cor = np.ones((len(yv), len(xv)))
 
-        plaquette = img[max_offset:img_size_offset[0], max_offset:img_size_offset[1]]
+        plaquette = img[max_offset:img_size_offset[0],
+                        max_offset:img_size_offset[1]]
 
         for x in range(len(offset_range)):
             for y in range(len(offset_range)):
                 x_offset = xv[y, x]
                 y_offset = yv[y, x]
 
-                offset_plaquette = img[max_offset + y_offset:img_size_offset[0] + y_offset, max_offset + x_offset:img_size_offset[1] + x_offset]
-                cor[y, x] = np.corrcoef(plaquette.reshape(-1), offset_plaquette.reshape(-1))[0, 1]
+                offset_plaquette = img[max_offset +
+                                       y_offset:img_size_offset[0]
+                                       + y_offset, max_offset +
+                                       x_offset:img_size_offset[1] + x_offset]
+                cor[y, x] = np.corrcoef(plaquette.reshape(-1),
+                                        offset_plaquette.reshape(-1))[0, 1]
 
         AC.__init__(self, xv, yv, cor)
 

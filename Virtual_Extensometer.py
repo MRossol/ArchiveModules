@@ -1,12 +1,12 @@
-__author__ = 'Michael Rossol'
-
-__all__ = ["euclidean_dist", "RGB_to_BW", "img_processing", "img_len", "img_load"]
-
 
 from scipy import ndimage
 import numpy as np
 import cv2
 import DIC
+
+__author__ = 'Michael Rossol'
+
+__all__ = ["euclidean_dist", "RGB_to_BW", "img_processing", "img_load"]
 
 
 def euclidean_dist(point1, point2):
@@ -96,7 +96,8 @@ class img_processing(object):
         Parameters
         ----------
         thresh : 'float', 'tuple', 'list'
-            threshold method, None = 'Automatic', 'list'/'tuple' = adaptive, 'float' = standard
+            threshold method, None = 'Automatic', 'list'/'tuple' = adaptive,
+            'float' = standard
         invert : 'boole'
             invert binary.
 
@@ -106,13 +107,18 @@ class img_processing(object):
             binary image array
         """
         if thresh is None:
-            (t_ref, b_img) = cv2.threshold(self.img, 0, 1, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+            (t_ref, b_img) = cv2.threshold(self.img, 0, 1,
+                                           cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             self.thresh = t_ref
         elif isinstance(thresh, (list, tuple)):
-            b_img = cv2.adaptiveThreshold(self.img, 1, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, thresh[0], thresh[1])
+            b_img = cv2.adaptiveThreshold(self.img, 1,
+                                          cv2.ADAPTIVE_THRESH_MEAN_C,
+                                          cv2.THRESH_BINARY, thresh[0],
+                                          thresh[1])
         else:
             img_max = np.max(self.img)
-            b_img = cv2.threshold(self.img, thresh, img_max, cv2.THRESH_BINARY)[1]
+            b_img = cv2.threshold(self.img, thresh, img_max,
+                                  cv2.THRESH_BINARY)[1]
             b_img[b_img == img_max] = 1
 
         if invert:
@@ -254,8 +260,10 @@ class img_processing(object):
         b_img = self.img_b
         label_im, nb_labels = ndimage.label(b_img)
 
-        center = np.asarray(ndimage.center_of_mass(b_img, label_im, range(1, nb_labels + 1)))
-        size = np.asarray(ndimage.sum(b_img, label_im, range(1, nb_labels + 1)))
+        center = np.asarray(ndimage.center_of_mass(b_img, label_im,
+                            range(1, nb_labels + 1)))
+        size = np.asarray(ndimage.sum(b_img, label_im,
+                          range(1, nb_labels + 1)))
 
         self.labels = label_im
         self.centers = center

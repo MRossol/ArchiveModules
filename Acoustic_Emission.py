@@ -1,12 +1,12 @@
-__author__ = 'Michael Rossol'
-
-__all__ = ['get_dB', 'get_Vt', 'get_t_end', 'AE', 'AE_cont', 'AE_wavelets']
-
 import datetime
 import numpy as np
 import pandas as pd
 from scipy import ndimage
 from detect_peaks import detect_peaks
+
+__author__ = 'Michael Rossol'
+
+__all__ = ['get_dB', 'get_Vt', 'get_t_end', 'AE', 'AE_cont', 'AE_wavelets']
 
 
 def get_dB(volts, gain=40):
@@ -57,7 +57,8 @@ def get_t_end(path):
         next(f)
         te = next(f)
     te = te.strip().split('"')[1]
-    te = datetime.datetime.strptime(te, "%A, %B %d, %Y %I:%M:%S %p").timestamp()
+    te = datetime.datetime.strptime(te,
+                                    "%A, %B %d, %Y %I:%M:%S %p").timestamp()
     return te
 
 
@@ -111,12 +112,15 @@ class AE(object):
         energies = []
 
         for wavelet in wavelets:
-            peak_pos = detect_peaks(wavelet[:, 1], mph=get_Vt(threshold, gain=gain))
+            peak_pos = detect_peaks(wavelet[:, 1], mph=get_Vt(threshold,
+                                    gain=gain))
 
             counts.append(len(peak_pos))
             amplitudes.append(get_dB(np.max(wavelet[:, 1]), gain=gain))
-            rise_ts.append(wavelet[np.argmax(wavelet[:, 1]), 0] - wavelet[peak_pos[0], 0])
-            durations.append(wavelet[peak_pos[-1], 0] - wavelet[peak_pos[0], 0])
+            rise_ts.append(wavelet[np.argmax(wavelet[:, 1]), 0] -
+                           wavelet[peak_pos[0], 0])
+            durations.append(wavelet[peak_pos[-1], 0] -
+                             wavelet[peak_pos[0], 0])
             MARSE = wavelet[peak_pos[0]:, 1]
             energies.append(np.sum(MARSE[MARSE > 0]))
 
@@ -158,14 +162,16 @@ class AE(object):
 
         instron_data[:, 0] = te + (instron_data[:, 0] - instron_data[-1, 0])
 
-        strains = np.interp(self.event_times, instron_data[:, 0], instron_data[:, 1])
+        strains = np.interp(self.event_times, instron_data[:, 0],
+                            instron_data[:, 1])
 
         if percentage:
             self.strains = strains*100
         else:
             self.strains = strains
 
-        self.stresses = np.interp(self.event_times, instron_data[:, 0], instron_data[:, 2])
+        self.stresses = np.interp(self.event_times, instron_data[:, 0],
+                                  instron_data[:, 2])
 
         self.data['strains'] = self.strains
         self.data['stresses'] = self.stresses
@@ -198,7 +204,8 @@ class AE(object):
 class AE_cont(AE):
     def __init__(self, file, threshold, PDT=100, HDT=200, HLT=300):
         """
-        Extracts AE wavelets from continuous AE waveform and initiates AE instance
+        Extracts AE wavelets from continuous AE waveform and initiates AE
+        instance
         Parameters
         ----------
         file : 'string;
@@ -208,7 +215,8 @@ class AE_cont(AE):
         PDT : 'float'
             Peak Definition Time = minimum wavelet length in us
         HDT : 'float'
-            Hit Definition Time = time till end of wavelet in us after last count
+            Hit Definition Time = time till end of wavelet in us after last
+            count
         HLT : 'float'
             Hit Lag Time = minimum time between events
         gain : 'float'
@@ -227,7 +235,9 @@ class AE_cont(AE):
             info = [next(f) for _ in range(3)]
 
         time_stamp = info[0].split(',')[1].strip().split('.')
-        s_time = datetime.datetime.strptime(time_stamp[0], "%m/%d/%Y %H:%M:%S").timestamp() + float('.'+time_stamp[1])
+        s_time = datetime.datetime.strptime(time_stamp[0],
+                                            "%m/%d/%Y %H:%M:%S").timestamp() +
+                                            float('.' + time_stamp[1])
         gain = float(info[2].split(',')[1].strip())
         frequency = float(info[1].split(',')[1].strip())
 
@@ -244,7 +254,9 @@ class AE_cont(AE):
         for label in np.arange(1, nclusters + 1):
             pos = np.where(clusters == label)[0][[0, -1]]
             if np.diff(pos)[0] >= (PDT*10**-6*frequency):
-                start, stop = points[pos[0]], points[pos[1] + 1] + int(np.round(HDT*10**-6*frequency) + 1)
+                start = points[pos[0]]
+                stop = points[pos[1] + 1] +
+                       int(np.round(HDT*10**-6*frequency) + 1)
                 wavelet = waveform[start:stop]
                 event_times.append(wavelet[0, 0]*10**-6 + s_time)
                 wavelet[:, 0] = wavelet[:, 0] - wavelet[0, 0]
@@ -265,7 +277,8 @@ class AE_cont(AE):
         """
         output = []
         for wavelet, e_time in zip(self.wavelets, self.event_times):
-            output.append(np.dstack((np.ones(len(wavelet))*e_time, wavelet[:, 0], wavelet[:, 1]))[0])
+            output.append(np.dstack((np.ones(len(wavelet))*e_time,
+                          wavelet[:, 0], wavelet[:, 1]))[0])
 
         if filename is None:
             filename = self.path[:-4] + '.dat'
@@ -292,6 +305,7 @@ class AE_wavelets(AE):
         data = np.loadtxt(file)
 
         event_times = np.unique(data[:, 0])
-        wavelets = [data[np.where(data[:, 0] == event)[0], 1:] for event in event_times]
+        wavelets = [data[np.where(data[:, 0] == event)[0], 1:]
+                    for event in event_times]
 
         AE.__init__(self, wavelets, event_times, threshold, gain)
