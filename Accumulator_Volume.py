@@ -724,8 +724,8 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
                       sc.optimize.fsolve(yzfit, y_range[1])]
 
             if (np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2 >
-               (np.mean((x_range[1] - x_range[0],
-               y_range[1] - y_range[0]))/2)*1.25):
+               (np.mean((x_range[1] - x_range[0], y_range[1] -
+                y_range[0]))/2)*1.25):
 
                 y_lims = y_range
 

@@ -229,8 +229,8 @@ def get_t_start(path):
     with open(path) as f:
         ts = next(f)
     ts = ts.strip()[11:].split('.')
-    ts = datetime.datetime.strptime(ts[0].strip(),
-         "%m/%d/%Y %H:%M:%S").timestamp() + float('.' + ts[1])
+    ts = (datetime.datetime.strptime(ts[0].strip(),
+          "%m/%d/%Y %H:%M:%S").timestamp() + float('.' + ts[1]))
     return ts
 
 
