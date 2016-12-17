@@ -50,6 +50,7 @@ def get_COLORS(colors, n=None):
 
     return [COLORS[color] for color in colors]
 
+
 def_linestyles = ('-', '--', '-.', ':')
 def_markers = (u'o', u'v', u'^', u'<', u'>', u'8', u's', u'p', u'*', u'h',
                u'H', u'D', u'd')
@@ -77,29 +78,29 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     """
     Parameters
     ----------
-    data : 'array_like', shape(data[i]) = (n,2)
+    data : 'ndarray', shape(data[i]) = (n,2)
         Either a tuple or list of nx2 arrays or a single nx2 array.
     xlabel : 'String'
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'array-like', len(xlim) == 2
+    xlim : 'ndarray', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'array-like', len(ylim) == 2
+    ylim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    xticks : 'array-like'
+    xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
         xlim.
-    yticks : 'array-like'
+    yticks : 'ndarray'
         List of ticks to use on the y-axis. Should be within the bound set by
         ylim.
-    ticksize : 'array-like', default '[8,2]'
+    ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
-    colors : 'array-like'
+    colors : 'ndarray'
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
         in 'data'.
-    linestyles : 'array-like'
+    linestyles : 'ndarray'
         Iterable list of Matplotlib designations for the linestyle for each
         line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -108,7 +109,7 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
-    markers : 'array-like'
+    markers : 'ndarray'
         Iterable list of Matplotlib designations for the marker for each line
         in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -238,19 +239,19 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'array-like', len(xlim) == 2
+    xlim : 'ndarray', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'array-like', len(ylim) == 2
+    ylim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    xticks : 'array-like'
+    xticks : 'ndarray'
         List of ticks to use on the x-axis. Default is the index of the Series
         or DataFrame.
-    yticks : 'array-like'
+    yticks : 'ndarray'
         List of ticks to use on the y-axis. Should be within the bound set by
         ylim.
-    ticksize : 'array-like', default '[8,2]'
+    ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
-    colors : 'array-like'
+    colors : 'ndarray'
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
         in 'data'.
@@ -369,34 +370,34 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
     Parameters
     ----------
-    data1 : 'array_like', shape(data2[i]) = (n,2)
+    data1 : 'ndarray', shape(data2[i]) = (n,2)
         Either a tuple or list of nx2 arrays or a single nx2 array.
-    data2 : 'array_like', shape(data2[i]) = (n,2)
+    data2 : 'ndarray', shape(data2[i]) = (n,2)
         Either a tuple or list of nx2 arrays or a single nx2 array.
     xlabel : 'String'
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'array-like', len(xlim) == 2
+    xlim : 'ndarray', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'array-like', len(ylim) == 2
+    ylim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    xticks : 'array-like'
+    xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
         xlim.
-    yticks : 'array-like'
+    yticks : 'ndarray'
         List of ticks to use on the y-axis. Should be within the bound set by
         ylim.
-    ticksize : 'array-like', default '[8,2]'
+    ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
     axis_colors : 'string', 'tuple'
         string indicating y-axis colors, tuple of strings indicates color of
         each y-axis
-    colors : 'array-like'
+    colors : 'ndarray'
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
         in 'data'.
-    linestyles : 'array-like'
+    linestyles : 'ndarray'
         Iterable list of Matplotlib designations for the linestyle for each
         line in 'data'. Will be cycled if fewer entries are specified than the
         number of lines in 'data'.
@@ -404,7 +405,7 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
-    markers : 'array-like'
+    markers : 'ndarray'
         Iterable list of Matplotlib designations for the marker for each line
         in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -593,30 +594,30 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     """
     Parameters
     ----------
-    data : 'array_like', shape(data[i]) = (n,2,2)
+    data : 'ndarray', shape(data[i]) = (n,2,2)
         Either a tuple or list of nx2X2 arrays or a single nx2X2 array.
         data given as an array or list of [[x, sigma_x], [y, sigma_y]
     xlabel : 'String'
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'array-like', len(xlim) == 2
+    xlim : 'ndarray', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'array-like', len(ylim) == 2
+    ylim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    xticks : 'array-like'
+    xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
         xlim.
-    yticks : 'array-like'
+    yticks : 'ndarray'
         List of ticks to use on the y-axis. Should be within the bound set by
         ylim.
-    ticksize : 'array-like', default '[8,2]'
+    ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
-    colors : 'array-like'
+    colors : 'ndarray'
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
         in 'data'.
-    linestyles : 'array-like'
+    linestyles : 'ndarray'
         Iterable list of Matplotlib designations for the linestyle for each
         line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -625,7 +626,7 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
-    markers : 'array-like'
+    markers : 'ndarray'
         Iterable list of Matplotlib designations for the marker for each line
         in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -763,13 +764,13 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
     """
     Parameters
     ----------
-    data : 'array_like', len(data) = 3, shape(data[i]) = (n,m)
+    data : 'ndarray', len(data) = 3, shape(data[i]) = (n,m)
         Either a tuple or list of nx2 arrays or a single nx2 array.
-    xlim : 'array-like', len(xlim) == 2
+    xlim : 'ndarray', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'array-like', len(ylim) == 2
+    ylim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    zlim : 'array-like', len(ylim) == 2
+    zlim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the z-data.
     major_spacing : 'float'
         Spacing between major contours.
@@ -787,6 +788,10 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
         Location of colorbar with respect to contour_plot
     colorbar_label : 'string'
         Label for colorbar.
+    colorbar_lines : 'boole'
+        Show contour lines on colorbar
+    colormap : 'string'
+        Colormap name
     font : 'String'
         Font to be used.
     fontsize_axes : 'Int'
@@ -801,13 +806,13 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xticks : 'array-like'
+    xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
         xlim.
-    yticks : 'array-like'
+    yticks : 'ndarray'
         List of ticks to use on the y-axis. Should be within the bound set by
         ylim.
-    ticksize : 'array-like', default '[8,2]'
+    ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
     boarderwidth : 'Int'
         Linewidth of plot frame
@@ -945,9 +950,169 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
         if colorbar_label is not None:
             cbar.set_label(colorbar_label, size=fontsize_colorbar)
 
-        if colorbar_lines:
+        if colorbar_lines is not None:
             if contour_color is not None:
                 cbar.add_lines(cl)
+
+    fig.tight_layout()
+
+    if filename is not None:
+        mplt.savefig(filename, dpi=resolution, transparent=True,
+                     bbox_inches='tight')
+
+    if showfig:
+        mplt.show()
+
+
+def scatter_plot(data, xlim=None, ylim=None, colorbar_on=True,
+                 colorbar_location='right', colorbar_label=None,
+                 colorbar_lines=True, colorbar_ticks=None, colormap=None,
+                 font='Arial', fontsize_axes=21, fontsize_other=18,
+                 fontsize_colorbar=21, xlabel=None, ylabel=None, xticks=None,
+                 yticks=None, ticksize=(8, 2), borderwidth=2, figsize=[8, 6],
+                 resolution=300, showfig=True, filename=None):
+    """
+    Parameters
+    ----------
+    data : 'ndarray'
+        nx3 array of data
+    xlim : 'ndarray', len(xlim) == 2
+        Upper and lower limits for the x-axis.
+    ylim : 'ndarray', len(ylim) == 2
+        Upper and lower limits for the y-axis.
+    colorbar_on : 'boole', default=True
+        Show colorbar.
+    colorbar_location : 'string'
+        Location of colorbar with respect to contour_plot
+    colorbar_label : 'string'
+        Label for colorbar
+    colormap : 'string'
+        Colormap name
+    font : 'String'
+        Font to be used.
+    fontsize_axes : 'Int'
+        Font size to be used for axes labels.
+    fontsize_other : 'Int'
+        Font size to be used for all other text (legend, axis numbers, etc.).
+    fontsize_colorbar : 'Int'
+        Font size to be used for colorbar label.
+    xlabel : 'String'
+        Label for x-axis.
+    ylabel : 'String'
+        Label for y-axis.
+    xticks : 'ndarray'
+        List of ticks to use on the x-axis. Should be within the bounds set by
+        xlim.
+    yticks : 'ndarray'
+        List of ticks to use on the y-axis. Should be within the bound set by
+        ylim.
+    ticksize : 'ndarray', default '[8,2]'
+        Length and width of ticks.
+    boarderwidth : 'Int'
+        Linewidth of plot frame
+    figsize : 'Tuple', default = '(8,6)'
+        Width and height of figure
+    resolution : 'Int', default = '300'
+        DPI resolution of figure.
+    showfig : 'Bool', default = 'True'
+        Whether to show figure.
+    filename : 'String', default = None.
+        Name of file/path to save the figure to.
+
+    Returns
+    -------
+    Plot (x, y, z) arrays in 'data' as filled contours.
+    """
+
+    assert data.shape[-1] == 3, 'Data must equal (x, y, data)'
+
+    x = data[:, 0]
+    y = data[:, 1]
+    c = data[:, 2]
+    zmax, zmin = c.max(), c.min()
+
+    if colorbar_on:
+        if colorbar_location in ['top', 'bottom']:
+            figsize[1] += figsize[1]/10
+            cbar_size = figsize[0]/20
+        else:
+            figsize[0] += figsize[0]/10
+            cbar_size = figsize[1]/20
+
+        if colorbar_ticks is None:
+            l_levels = None
+        else:
+            zmax, zmin = c.max(), c.min()
+            l_levels = (zmax - zmin)/colorbar_ticks
+            l_levels = np.arange(zmin, zmax + l_levels, l_levels)
+    else:
+        cbar_size = max(figsize)/20
+
+    orientation = 'vertical'
+    if colorbar_location in ['top', 'bottom']:
+        orientation = 'horizontal'
+
+    fig = mplt.figure(figsize=figsize, dpi=resolution)
+    axis = fig.add_subplot(111)
+
+    s = mplt.scatter(x, y, c=c, norm=mpl.colors.Normalize(vmin=zmin,
+                                                          vmax=zmax))
+
+    if colormap is not None:
+        s.set_cmap(colormap)
+
+    mpl.rcParams['font.sans-serif'] = font
+    mpl.rcParams['pdf.fonttype'] = 42
+
+    if xlim is not None:
+        axis.set_xlim(xlim)
+
+    if ylim is not None:
+        axis.set_ylim(ylim)
+
+    for ax in ['top', 'bottom', 'left', 'right']:
+        axis.spines[ax].set_linewidth(borderwidth)
+
+    if xlabel is not None:
+        axis.set_xlabel(xlabel, fontsize=fontsize_axes)
+
+    if ylabel is not None:
+        axis.set_ylabel(ylabel, fontsize=fontsize_axes)
+
+    axis.tick_params(axis='both', labelsize=fontsize_other,
+                     width=ticksize[1], length=ticksize[0])
+
+    if xticks is not None:
+        axis.set_xticks(xticks)
+
+    if yticks is not None:
+        axis.set_yticks(yticks)
+
+    if colorbar_on:
+        cbar_padding = 0.1
+        if colorbar_location == 'bottom':
+            if xlabel is None:
+                cbar_padding = 0.4
+            else:
+                cbar_padding = 0.8
+        elif colorbar_location == 'left':
+            if ylabel is None:
+                cbar_padding = 0.7
+            else:
+                cbar_padding = 1.1
+        divider = make_axes_locatable(axis)
+
+        caxis = divider.append_axes(colorbar_location, size=cbar_size,
+                                    pad=cbar_padding)
+
+        cbar = mplt.colorbar(s, ticks=l_levels, cax=caxis,
+                             orientation=orientation,
+                             ticklocation=colorbar_location)
+
+        cbar.ax.tick_params(labelsize=fontsize_other)
+
+        if colorbar_label is not None:
+            cbar.set_label(colorbar_label, size=fontsize_colorbar)
 
     fig.tight_layout()
 
@@ -970,13 +1135,13 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
     """
     Parameters
     ----------
-    data : 'array_like', len(data) = 3, shape(data[i]) = (n,m)
+    data : 'ndarray', len(data) = 3, shape(data[i]) = (n,m)
         Either a tuple or list of nx2 arrays or a single nx2 array.
-    xlim : 'array-like', len(xlim) == 2
+    xlim : 'ndarray', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'array-like', len(ylim) == 2
+    ylim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    zlim : 'array-like', len(ylim) == 2
+    zlim : 'ndarray', len(ylim) == 2
         Upper and lower limits for the z-data.
     major_spacing : 'float'
         Spacing between major contours.
@@ -1008,13 +1173,13 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xticks : 'array-like'
+    xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
         xlim.
-    yticks : 'array-like'
+    yticks : 'ndarray'
         List of ticks to use on the y-axis. Should be within the bound set by
         ylim.
-    ticksize : 'array-like', default '[8,2]'
+    ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
     boarderwidth : 'Int'
         Linewidth of plot frame
@@ -1167,7 +1332,7 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
     """
     Parameters
     ----------
-    zlim : 'Array-Like'
+    zlim : 'ndarray'
         List or tuple indicating zmin and zmax.
     tick : 'Int'
         Number of ticks to label.
