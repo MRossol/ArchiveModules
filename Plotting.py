@@ -969,7 +969,7 @@ def scatter_plot(data, xlim=None, ylim=None, colorbar_on=True,
                  colorbar_lines=True, colorbar_ticks=None, colormap=None,
                  font='Arial', fontsize_axes=21, fontsize_other=18,
                  fontsize_colorbar=21, xlabel=None, ylabel=None, xticks=None,
-                 yticks=None, ticksize=(8, 2), borderwidth=2, figsize=[8, 6],
+                 yticks=None, ticksize=(8, 2), borderwidth=2, figsize=(8, 6),
                  resolution=300, showfig=True, filename=None):
     """
     Parameters
@@ -1030,6 +1030,9 @@ def scatter_plot(data, xlim=None, ylim=None, colorbar_on=True,
     y = data[:, 1]
     c = data[:, 2]
     zmax, zmin = c.max(), c.min()
+
+    if isinstance(figsize, tuple):
+        figsize = list(figsize)
 
     if colorbar_on:
         if colorbar_location in ['top', 'bottom']:
