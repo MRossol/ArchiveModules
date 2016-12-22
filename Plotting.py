@@ -84,9 +84,9 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
@@ -239,9 +239,9 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'ndarray'
         List of ticks to use on the x-axis. Default is the index of the Series
@@ -378,9 +378,9 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
@@ -601,9 +601,9 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Label for x-axis.
     ylabel : 'String'
         Label for y-axis.
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
     xticks : 'ndarray'
         List of ticks to use on the x-axis. Should be within the bounds set by
@@ -766,11 +766,11 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
     ----------
     data : 'ndarray', len(data) = 3, shape(data[i]) = (n,m)
         Either a tuple or list of nx2 arrays or a single nx2 array.
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    zlim : 'ndarray', len(ylim) == 2
+    zlim : 'tuple', len(ylim) == 2
         Upper and lower limits for the z-data.
     major_spacing : 'float'
         Spacing between major contours.
@@ -964,7 +964,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
         mplt.show()
 
 
-def scatter_plot(data, xlim=None, ylim=None, colorbar_on=True,
+def scatter_plot(data, xlim=None, ylim=None, zlim=None, colorbar_on=True,
                  colorbar_location='right', colorbar_label=None,
                  colorbar_lines=True, colorbar_ticks=None, colormap=None,
                  font='Arial', fontsize_axes=21, fontsize_other=18,
@@ -976,10 +976,12 @@ def scatter_plot(data, xlim=None, ylim=None, colorbar_on=True,
     ----------
     data : 'ndarray'
         nx3 array of data
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
+    zlim : 'tuple', len(ylim) == 2
+        Upper and lower limits for the colorbar.
     colorbar_on : 'boole', default=True
         Show colorbar.
     colorbar_location : 'string'
@@ -1042,10 +1044,15 @@ def scatter_plot(data, xlim=None, ylim=None, colorbar_on=True,
             figsize[0] += figsize[0]/10
             cbar_size = figsize[1]/20
 
+        if zlim is None:
+            zmax, zmin = c.max(), c.min()
+        else:
+            zmax, zmin = zlim
+
         if colorbar_ticks is None:
             l_levels = None
         else:
-            zmax, zmin = c.max(), c.min()
+
             l_levels = (zmax - zmin)/colorbar_ticks
             l_levels = np.arange(zmin, zmax + l_levels, l_levels)
     else:
@@ -1140,11 +1147,11 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
     ----------
     data : 'ndarray', len(data) = 3, shape(data[i]) = (n,m)
         Either a tuple or list of nx2 arrays or a single nx2 array.
-    xlim : 'ndarray', len(xlim) == 2
+    xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
-    ylim : 'ndarray', len(ylim) == 2
+    ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
-    zlim : 'ndarray', len(ylim) == 2
+    zlim : 'tuple', len(ylim) == 2
         Upper and lower limits for the z-data.
     major_spacing : 'float'
         Spacing between major contours.
@@ -1335,7 +1342,7 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
     """
     Parameters
     ----------
-    zlim : 'ndarray'
+    zlim : 'tuple'
         List or tuple indicating zmin and zmax.
     tick : 'Int'
         Number of ticks to label.
