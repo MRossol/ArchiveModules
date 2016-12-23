@@ -220,6 +220,8 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     if showfig:
         mplt.show()
 
+    mplt.close()
+
 
 def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
               ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
@@ -358,6 +360,8 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
 
     if showfig:
         mplt.show()
+
+    mplt.close()
 
 
 def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
@@ -583,6 +587,8 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
     if showfig:
         mplt.show()
 
+    mplt.close()
+
 
 def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
                xticks=None, yticks=None, ticksize=(8, 2), colors=None,
@@ -750,6 +756,8 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
     if showfig:
         mplt.show()
+
+    mplt.close()
 
 
 def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
@@ -963,6 +971,8 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
     if showfig:
         mplt.show()
 
+    mplt.close()
+
 
 def scatter_plot(data, xlim=None, ylim=None, zlim=None, colorbar_on=True,
                  colorbar_location='right', colorbar_label=None,
@@ -1132,6 +1142,8 @@ def scatter_plot(data, xlim=None, ylim=None, zlim=None, colorbar_on=True,
 
     if showfig:
         mplt.show()
+
+    mplt.close()
 
 
 def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
@@ -1333,6 +1345,8 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
     if showfig:
         mplt.show()
 
+    mplt.close()
+
 
 def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
              colormap=None, extend='neither', ticklocation='right',
@@ -1419,3 +1433,5 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
 
     if showfig:
         mplt.show()
+
+    mplt.close()
