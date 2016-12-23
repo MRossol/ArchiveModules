@@ -974,9 +974,11 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
     mplt.close()
 
 
-def scatter_plot(data, xlim=None, ylim=None, zlim=None, colorbar_on=True,
-                 colorbar_location='right', colorbar_label=None,
-                 colorbar_lines=True, colorbar_ticks=None, colormap=None,
+def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
+                 linestyle=None, linewidth=2, color=None, marker=None,
+                 markersize=5, colorbar_on=True, colorbar_location='right',
+                 colorbar_label=None, colorbar_lines=True,
+                 colorbar_ticks=None, colormap=None,
                  font='Arial', fontsize_axes=21, fontsize_other=18,
                  fontsize_colorbar=21, xlabel=None, ylabel=None, xticks=None,
                  yticks=None, ticksize=(8, 2), borderwidth=2, figsize=(8, 6),
@@ -986,12 +988,24 @@ def scatter_plot(data, xlim=None, ylim=None, zlim=None, colorbar_on=True,
     ----------
     data : 'ndarray'
         nx3 array of data
+    line : 'ndarray'
+        nx2 array of data to plot on top of scatter plot.
     xlim : 'tuple', len(xlim) == 2
         Upper and lower limits for the x-axis.
     ylim : 'tuple', len(ylim) == 2
         Upper and lower limits for the y-axis.
     zlim : 'tuple', len(ylim) == 2
         Upper and lower limits for the colorbar.
+    color : 'str' or 'list'
+        Color to plot.
+    linestyle : 'str'
+        Linestyle for line.
+    linewidth : 'Int'
+        Line width for line in.
+    markersize : 'Float'
+        Marker size for marker.
+    marker : 'ndarray'
+        Marker for line.
     colorbar_on : 'boole', default=True
         Show colorbar.
     colorbar_location : 'string'
@@ -1077,6 +1091,10 @@ def scatter_plot(data, xlim=None, ylim=None, zlim=None, colorbar_on=True,
 
     s = mplt.scatter(x, y, c=c, norm=mpl.colors.Normalize(vmin=zmin,
                                                           vmax=zmax))
+    if line is not None:
+        axis.plot(line[:, 0], line[:, 1],  linestyle=linestyle,
+                  linewidth=linewidth, markersize=markersize, marker=marker,
+                  color=color)
 
     if colormap is not None:
         s.set_cmap(colormap)
