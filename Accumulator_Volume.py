@@ -60,7 +60,7 @@ def DIC_P(data_path, DIC_data, t_shift=None, KPa=False):
     if t_shift is not None:
         t_p = t_p + [t_shift, 0]
 
-    img_t = data[1:, 2:]/[1, 1000]
+    img_t = data[1:, 2:] / [1, 1000]
     img_t = np.asarray([np.mean(img_t[img_t[:, 0] == img], axis=0) for img in
                        np.unique(img_t[:, 0])])
     img_t_interp = scipy.interpolate.interp1d(img_t[:, 0], img_t[:, 1])
@@ -77,7 +77,7 @@ def DIC_P(data_path, DIC_data, t_shift=None, KPa=False):
 
 def img_numb(data, pressure):
     """
-    ?
+    Return image number corresponding to pressure value
     Parameters
     ----------
     data
@@ -123,7 +123,7 @@ def get_h(DIC_data, method='fit', z_shift=None):
     Y = np.delete(data['Y'].flatten(), bad_pos)
     x_lims = [X.min(), X.max()]
     y_lims = [Y.min(), Y.max()]
-    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
+    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
 
     height = []
     for frame in range(len(DIC_data.mat)):
@@ -147,7 +147,7 @@ def get_h(DIC_data, method='fit', z_shift=None):
             def fitfunc(p, coords):
                 x0, y0, z0, R = p
                 x, y, z = coords
-                return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+                return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
             errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -158,7 +158,7 @@ def get_h(DIC_data, method='fit', z_shift=None):
 
             h = R + z0
 
-            a = np.sqrt(h*(2*R - h))
+            a = np.sqrt(h * (2 * R - h))
 
             if np.isnan(a) or a > a0 * 1.25 or z0 > 0:
                 h = np.nan
@@ -204,7 +204,7 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
     Y = np.delete(data['Y'].flatten(), bad_pos)
     x_lims = [X.min(), X.max()]
     y_lims = [Y.min(), Y.max()]
-    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
+    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
 
     volume = []
     error = []
@@ -226,7 +226,7 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
         def fitfunc(p, coords):
             x0, y0, z0, R = p
             x, y, z = coords
-            return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+            return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
         errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -237,7 +237,7 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
 
         h = R + z0
 
-        a_h = np.sqrt(h*(2*R - h))
+        a_h = np.sqrt(h * (2 * R - h))
 
         if np.isnan(a_h) or a_h > a0 * 1.25 or z0 > 0:
             V = np.nan
@@ -246,7 +246,8 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
             XYi = np.dstack((Xi, Yi))[0]
 
             if step is None:
-                step = np.round(DIC_data.get_hstep()*DIC_data.get_mag()[1], 2)
+                step = np.round(DIC_data.get_hstep() * DIC_data.get_mag()[1],
+                                2)
 
             xrange = np.arange(Xi.min(), Xi.max() + step, step)
             yrange = np.arange(Yi.min(), Yi.max() + step, step)
@@ -264,16 +265,16 @@ def PV_werror(DIC_data, pressure, step=None, z_shift=None):
                 return np.sqrt(R**2 - (x - x0)**2 - (y - y0)**2) + z0
 
             dz = xyz[:, 2] - h_z(xyz[:, :2])
-            dV = np.sqrt(np.sum(dz**2))*step**2
+            dV = np.sqrt(np.sum(dz**2)) * step**2
 
-            V = (1/6)*np.pi*h*(3*a_h**2 + h**2)
+            V = (1 / 6) * np.pi * h * (3 * a_h**2 + h**2)
 
         volume.append(V)
         error.append(dV)
 
     PV = np.dstack((pressure, np.asarray(volume)))[0]
 
-    PVe = np.dstack((np.zeros(len(pressure))*np.nan, np.asarray(error)))[0]
+    PVe = np.dstack((np.zeros(len(pressure)) * np.nan, np.asarray(error)))[0]
     return np.dstack((PV, PVe))
 
 
@@ -310,7 +311,7 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
     Y = np.delete(data['Y'].flatten(), bad_pos)
     x_lims = [X.min(), X.max()]
     y_lims = [Y.min(), Y.max()]
-    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
+    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
 
     output = []
     for frame in range(len(DIC_data.mat)):
@@ -333,7 +334,7 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
         def fitfunc(p, coords):
             x0, y0, z0, R = p
             x, y, z = coords
-            return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+            return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
         errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -344,14 +345,14 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
 
         h = R + z0
 
-        a_h = np.sqrt(h*(2*R - h))
+        a_h = np.sqrt(h * (2 * R - h))
 
         if np.isnan(a_h) or a_h > a0 * 1.25 or z0 > 0:
-            output.append([P_i, np.nan,  np.nan,  np.nan,  np.nan,  np.nan])
+            output.append([P_i, np.nan, np.nan, np.nan, np.nan, np.nan])
         else:
             XYi = np.dstack((Xi, Yi))[0]
 
-            step = np.round(DIC_data.get_hstep()*DIC_data.get_mag()[1], 2)
+            step = np.round(DIC_data.get_hstep() * DIC_data.get_mag()[1], 2)
 
             xrange = np.arange(Xi.min(), Xi.max() + step, step)
             yrange = np.arange(Yi.min(), Yi.max() + step, step)
@@ -369,9 +370,9 @@ def sphere_fit(DIC_data, pressure, z_shift=None):
                 return np.sqrt(R**2 - (x - x0)**2 - (y - y0)**2) + z0
 
             dz = xyz[:, 2] - h_z(xyz[:, :2])
-            dV = np.sqrt(np.sum(dz**2))*step**2
+            dV = np.sqrt(np.sum(dz**2)) * step**2
 
-            V = (1/6)*np.pi*h*(3*a_h**2 + h**2)
+            V = (1 / 6) * np.pi * h * (3 * a_h**2 + h**2)
 
             output.append([P_i, h, R, a_h, V, dV])
 
@@ -412,7 +413,7 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
     Y = np.delete(data['Y'].flatten(), bad_pos)
     x_lims = [X.min(), X.max()]
     y_lims = [Y.min(), Y.max()]
-    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
+    a0 = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
 
     volume = []
     for frame in range(len(DIC_data.mat)):
@@ -433,7 +434,7 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
         def fitfunc(p, coords):
             x0, y0, z0, R = p
             x, y, z = coords
-            return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+            return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
         errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -444,21 +445,22 @@ def hemisphere_PV(DIC_data, pressure, a=None, z_shift=None):
 
         h = R + z0
 
-        a_h = np.sqrt(h*(2*R - h))
+        a_h = np.sqrt(h * (2 * R - h))
 
         if np.isnan(a_h) or a_h > a0 * 1.25 or z0 > 0:
             a_h = a0
             h = Zi.max()
 
         if a is None:
-            V = (1/6)*np.pi*h*(3*a_h**2 + h**2)
+            V = (1 / 6) * np.pi * h * (3 * a_h**2 + h**2)
         else:
             def h_fit(x):
                 return np.sqrt(R**2 - x**2) + z0
 
             z_a = h_fit(a)
             h_a = h - z_a
-            V = (1/6)*np.pi*h_a*(3*a**2 + h_a**2) + np.pi*a**2*z_a
+            V = (1 / 6) * np.pi * h_a * (3 * a**2 + h_a**2) + (np.pi * a**2 *
+                                                               z_a)
 
         volume.append(V)
 
@@ -499,7 +501,7 @@ def cap_PV(DIC_data, pressure, a):
         data = DIC_data.get_data(frame)
         W = data['W'].flatten()
         h = W[max_pos] + Zo
-        volume.append((1/6)*np.pi*h*(3*a**2 + h**2))
+        volume.append((1 / 6) * np.pi * h * (3 * a**2 + h**2))
 
     return np.dstack((pressure, np.asarray(volume)))[0]
 
@@ -558,7 +560,7 @@ def DIC_PV(DIC_data, pressure, step=0.01, method='linear', z_shift=None):
         grid_z = scipy.interpolate.griddata(XYi, Zi, (grid_x, grid_y),
                                             method=method)
 
-        volume.append(np.nansum(grid_z)*step**2)
+        volume.append(np.nansum(grid_z) * step**2)
 
     return np.dstack((pressure, np.asarray(volume)))[0]
 
@@ -596,7 +598,7 @@ def paraboloid_PV(DIC_data, pressure, z_shift=None):
     Y = np.delete(data['Y'].flatten(), bad_pos)
     x_lims = [X.min(), X.max()]
     y_lims = [Y.min(), Y.max()]
-    a = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
+    a = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
 
     volume = []
     for frame in range(len(DIC_data.mat)):
@@ -616,8 +618,8 @@ def paraboloid_PV(DIC_data, pressure, z_shift=None):
         params = np.linalg.lstsq(A, Zi)[0]
 
         def ifit(x):
-            return (params[0]*x[0]**2 + params[1]*x[0] +
-                    params[2]*x[1]**2 + params[3]*x[1] + params[4])*-1
+            return (params[0] * x[0]**2 + params[1] * x[0] +
+                    params[2] * x[1]**2 + params[3] * x[1] + params[4]) * -1
 
         xo, yo = sc.optimize.fmin(ifit, np.array([0, 0]), disp=False)
 
@@ -628,25 +630,25 @@ def paraboloid_PV(DIC_data, pressure, z_shift=None):
 
         else:
             def xzfit(x):
-                return (params[0]*x**2 + params[1]*x + params[2]*yo**2 +
-                        params[3]*yo + params[4])
+                return (params[0] * x**2 + params[1] * x + params[2] * yo**2 +
+                        params[3] * yo + params[4])
             x_lims = [sc.optimize.fsolve(xzfit, x_lims[0]),
                       sc.optimize.fsolve(xzfit, x_lims[1])]
 
             def yzfit(y):
-                return (params[0]*xo**2 + params[1]*xo + params[2]*y**2 +
-                        params[3]*y + params[4])
+                return (params[0] * xo**2 + params[1] * xo + params[2] * y**2 +
+                        params[3] * y + params[4])
             y_lims = [sc.optimize.fsolve(yzfit, y_lims[0]),
                       sc.optimize.fsolve(yzfit, y_lims[1])]
 
-            ao = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
+            ao = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
 
-            if ao < a*1.25:
+            if ao < a * 1.25:
                 a = ao
 
         h = -1 * ifit([xo, yo])
 
-        volume.append((1/2)*np.pi*a**2*h)
+        volume.append((1 / 2) * np.pi * a**2 * h)
 
     return np.dstack((pressure, np.asarray(volume)))[0]
 
@@ -693,8 +695,8 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
         params = np.linalg.lstsq(A, Zi)[0]
 
         def ifit(x):
-            return (-1*(params[0]*x[0]**2 + params[1]*x[0] + params[2]*x[1]**2
-                    + params[3]*x[1] + params[4]))
+            return (-1 * (params[0] * x[0]**2 + params[1] * x[0] +
+                    params[2] * x[1]**2 + params[3] * x[1] + params[4]))
 
         xo, yo = sc.optimize.fmin(ifit, np.array([0, 0]), disp=False)
         x_range = [X.min(), X.max()]
@@ -707,35 +709,36 @@ def p_integrate_PV(DIC_data, pressure, z_shift=None):
             y_lims = y_range
 
             h = -1 * ifit([xo, yo])
-            a = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2
-            V = (1/2)*np.pi*a**2*h
+            a = np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2
+            V = (1 / 2) * np.pi * a**2 * h
         else:
             def xzfit(x):
-                return (params[0]*x**2 + params[1]*x + params[2]*yo**2 +
-                        params[3]*yo + params[4])
+                return (params[0] * x**2 + params[1] * x + params[2] * yo**2 +
+                        params[3] * yo + params[4])
             x_lims = [sc.optimize.fsolve(xzfit, x_range[0]),
                       sc.optimize.fsolve(xzfit, x_range[1])]
 
             def yzfit(y):
-                return (params[0]*xo**2 + params[1]*xo + params[2]*y**2 +
-                        params[3]*y + params[4])
+                return (params[0] * xo**2 + params[1] * xo + params[2] * y**2 +
+                        params[3] * y + params[4])
 
             y_lims = [sc.optimize.fsolve(yzfit, y_range[0]),
                       sc.optimize.fsolve(yzfit, y_range[1])]
 
-            if (np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0]))/2 >
-               (np.mean((x_range[1] - x_range[0], y_range[1] -
-                y_range[0]))/2)*1.25):
+            if (np.mean((x_lims[1] - x_lims[0], y_lims[1] - y_lims[0])) / 2 >
+               (np.mean((x_range[1] - x_range[0], y_range[1] - y_range[0])) /
+               2) * 1.25):
 
                 y_lims = y_range
 
             xf, yf = sp.symbols('xf yf')
-            sols = sp.solve(params[0]*xf**2 + params[1]*xf + params[2]*yf**2 +
-                            params[3]*yf + params[4], xf)
+            sols = sp.solve(params[0] * xf**2 + params[1] * xf + params[2] *
+                            yf**2 + params[3] * yf + params[4], xf)
 
-            V = sc.integrate.dblquad(lambda x, y: params[0]*x**2 + params[1]*x
-                                     + params[2]*y**2 + params[3]*y +
-                                     params[4], y_lims[0], y_lims[1],
+            V = sc.integrate.dblquad(lambda x, y: params[0] * x**2 +
+                                     params[1] * x + params[2] * y**2 +
+                                     params[3] * y + params[4], y_lims[0],
+                                     y_lims[1],
                                      lambda x: sols[0].subs(yf, x),
                                      lambda x: sols[1].subs(yf, x))[0]
 
@@ -781,7 +784,7 @@ def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     Zi = Z + W
 
     xlen = sigma.shape[0]
-    pos = DIC.nearest(Xa[int(np.round(xlen/2))], 0)
+    pos = DIC.nearest(Xa[int(np.round(xlen / 2))], 0)
     DIC_line = np.dstack((Xa, Zia))[pos]
     DIC_line = np.delete(DIC_line, np.where(sigma[pos] == -1), axis=0)
 
@@ -790,7 +793,7 @@ def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     def fitfunc(p, coords):
         x0, y0, z0, R = p
         x, y, z = coords
-        return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+        return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
     errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -799,13 +802,13 @@ def get_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords,))
 
     def h_fit(x):
-        return np.sqrt(R**2 - (x-x0)**2) + z0
+        return np.sqrt(R**2 - (x - x0)**2) + z0
 
     hemi_line = np.dstack((np.arange(-a, a + 0.1, 0.1),
                           h_fit(np.arange(-a, a + 0.1, 0.1))))[0]
 
     h = DIC_line[:, 1].max()
-    r = (a**2 + h**2)/(2*h)
+    r = (a**2 + h**2) / (2 * h)
 
     def cap(x):
         return np.sqrt(r**2 - x**2) + (h - r)
@@ -854,7 +857,7 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     Zi = Z + W
 
     xlen = sigma.shape[0]
-    pos = DIC.nearest(Xa[int(np.round(xlen/2))], 0)
+    pos = DIC.nearest(Xa[int(np.round(xlen / 2))], 0)
     DIC_line = np.dstack((Xa, Zia))[pos]
     DIC_line = np.delete(DIC_line, np.where(sigma[pos] == -1), axis=0)
 
@@ -863,7 +866,7 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     def fitfunc(p, coords):
         x0, y0, z0, R = p
         x, y, z = coords
-        return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+        return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
     errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -872,13 +875,13 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     (x0, y0, z0, R), flag = scipy.optimize.leastsq(errfunc, p0, args=(coords,))
 
     def h_fit(x):
-        return np.sqrt(R**2 - (x-x0)**2) + z0
+        return np.sqrt(R**2 - (x - x0)**2) + z0
 
-    hemi_line = np.dstack((np.arange(-a, a+.1, 0.1),
+    hemi_line = np.dstack((np.arange(-a, a + .1, 0.1),
                           h_fit(np.arange(-a, a + 0.1, 0.1))))[0]
 
     h = DIC_line[:, 1].max()
-    r = (a**2 + h**2)/(2*h)
+    r = (a**2 + h**2) / (2 * h)
 
     def cap(x):
         return np.sqrt(r**2 - x**2) + (h - r)
@@ -890,8 +893,8 @@ def get_all_lines(DIC_data, frame, a, xo=0, yo=0, zo=0):
     params = np.linalg.lstsq(A, Zi)[0]
 
     def p_fit(x, y):
-        return (params[0]*x**2 + params[1]*x + params[2]*y**2 + params[3]*y +
-                params[4])
+        return (params[0] * x**2 + params[1] * x + params[2] * y**2 +
+                params[3] * y + params[4])
 
     para_line = np.dstack((np.arange(-a, a + 0.1, 0.1),
                           p_fit(np.arange(-a, a + 0.1, 0.1), 0)))[0]
@@ -943,7 +946,7 @@ def get_shifts(DIC_data, frame=-1, z_shift=None):
     def fitfunc(p, coords):
         x0, y0, z0, R = p
         x, y, z = coords
-        return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+        return np.sqrt((x - x0)**2 + (y - y0)**2 + (z - z0)**2)
 
     errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
@@ -1034,19 +1037,19 @@ def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None,
     x = x + u
     y = y + v
 
-    y = -1*(y - ymax)
+    y = -1 * (y - ymax)
     z_m = ma.masked_invalid(Zi)
 
     a_ratio = image.shape
     a_ratio = a_ratio[1] / a_ratio[0]
 
     if isinstance(figsize, (int, float)):
-        cbar_size = figsize/20
-        figsize = (figsize*a_ratio, figsize)
+        cbar_size = figsize / 20
+        figsize = (figsize * a_ratio, figsize)
     else:
         figsize = max(figsize)
-        cbar_size = figsize/20
-        figsize = (figsize*a_ratio, figsize)
+        cbar_size = figsize / 20
+        figsize = (figsize * a_ratio, figsize)
 
     if zlim is None:
         cf_levels = np.linspace(np.nanmin(Zi), np.nanmax(Zi), 100)
@@ -1056,7 +1059,7 @@ def contour_overlay(DIC_data, frame, z_shift=None, xlim=None, ylim=None,
         if major_spacing is None:
             major_spacing = (zlim[1] - zlim[0]) / 10
         if minor_spacing is None:
-            minor_spacing = major_spacing/10
+            minor_spacing = major_spacing / 10
 
         cl_levels = np.arange(zlim[0], zlim[1] + major_spacing, major_spacing)
         cf_levels = np.arange(zlim[0], zlim[1] + minor_spacing, minor_spacing)

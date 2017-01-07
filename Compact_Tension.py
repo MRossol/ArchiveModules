@@ -1,3 +1,4 @@
+""" Script to automate processing of compact tension stress-strain curves"""
 import numpy as np
 
 __author__ = 'MNR'
@@ -19,7 +20,7 @@ def find_max_min_pos(data, x0, window=100):
         Size of window in which to search for max and min.
     """
 
-    x_range = [x0 - window/2, x0 + window/2]
+    x_range = [x0 - window / 2, x0 + window / 2]
     if x_range[0] < np.min(data[:, 0]):
         x_range[0] = np.min(data[:, 0])
     if x_range[1] > np.max(data[:, 0]):
@@ -112,7 +113,8 @@ def triangle_area(maximum, minimum):
     minimum : 'array_like', shape(minimum) = (1,3)
         (time, disp, load) at minimum.
     """
-    return 1/2 * (minimum[1] * maximum[2]) - 1/2 * (minimum[1] * minimum[2])
+    return 1 / 2 * (minimum[1] * maximum[2]) - 1 / 2 * (minimum[1] *
+                                                        minimum[2])
 
 
 def riffle(list1, list2):
@@ -252,7 +254,7 @@ class healed_ct(compact_tension):
                              end_m * shifted_data[max_pos:max_pos +
                              end_pos + 1, 1] + end_b))[0]
 
-        x_min = ((end_b - min_b)/(min_m - end_m))
+        x_min = ((end_b - min_b) / (min_m - end_m))
         minima = [np.asarray([shifted_data[nearest(shifted_data[:, 1],
                   x_min), 0], x_min, min_m * x_min + min_b]), ]
 

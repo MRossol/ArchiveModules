@@ -57,7 +57,7 @@ class AC(object):
         self.AC_1D = img_AC
 
         img_AC = img_AC[img_AC[:, 1].argsort()]
-        h_sp = np.interp(0.5, img_AC[:, 1], img_AC[:, 0])*2
+        h_sp = np.interp(0.5, img_AC[:, 1], img_AC[:, 0]) * 2
         self.h_sp = h_sp
 
 
@@ -87,10 +87,10 @@ class extract_AC(AC):
             img_size = img.shape
 
         if max_offset is None:
-            max_offset = round(min(img_size)/10)
+            max_offset = round(min(img_size) / 10)
 
         img_size_offset = (img_size[0] - max_offset, img_size[1] - max_offset)
-        offset_range = np.arange(-max_offset, max_offset+1)
+        offset_range = np.arange(-max_offset, max_offset + 1)
         xv, yv = np.meshgrid(offset_range, offset_range)
         cor = np.ones((len(yv), len(xv)))
 
@@ -103,8 +103,8 @@ class extract_AC(AC):
                 y_offset = yv[y, x]
 
                 offset_plaquette = img[max_offset +
-                                       y_offset:img_size_offset[0]
-                                       + y_offset, max_offset +
+                                       y_offset:img_size_offset[0] +
+                                       y_offset, max_offset +
                                        x_offset:img_size_offset[1] + x_offset]
                 cor[y, x] = np.corrcoef(plaquette.reshape(-1),
                                         offset_plaquette.reshape(-1))[0, 1]

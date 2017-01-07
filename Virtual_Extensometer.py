@@ -23,7 +23,7 @@ def euclidean_dist(point1, point2):
     -------
     distance : 'float'
     """
-    return np.sum((np.asarray(point1) - np.asarray(point2))**2)**(1/2)
+    return np.sum((np.asarray(point1) - np.asarray(point2))**2)**(1 / 2)
 
 
 def RGB_to_BW(img):

@@ -1,3 +1,4 @@
+""" Python Script to extract acoustic events from raw waveform data"""
 import datetime
 import numpy as np
 import pandas as pd
@@ -23,7 +24,7 @@ def get_dB(volts, gain=40):
     -------
     decibles (dB)
     """
-    return (20 * np.log10(volts/10**(-6)) - gain)
+    return (20 * np.log10(volts / 10**(-6)) - gain)
 
 
 def get_Vt(dB, gain=40):
@@ -40,7 +41,7 @@ def get_Vt(dB, gain=40):
     -------
     threshold voltage
     """
-    return 10**(-6) * 10**((dB+gain)/20)
+    return 10**(-6) * 10**((dB + gain) / 20)
 
 
 def get_t_end(path):
@@ -166,7 +167,7 @@ class AE(object):
                             instron_data[:, 1])
 
         if percentage:
-            self.strains = strains*100
+            self.strains = strains * 100
         else:
             self.strains = strains
 
@@ -235,14 +236,14 @@ class AE_cont(AE):
             info = [next(f) for _ in range(3)]
 
         time_stamp = info[0].split(',')[1].strip().split('.')
-        s_time = datetime.datetime.strptime(time_stamp[0],
-                                            "%m/%d/%Y %H:%M:%S").timestamp() +
-                                            float('.' + time_stamp[1])
+        s_time = (datetime.datetime.strptime(time_stamp[0],
+                                             "%m/%d/%Y %H:%M:%S").timestamp() +
+                  float('.' + time_stamp[1]))
         gain = float(info[2].split(',')[1].strip())
         frequency = float(info[1].split(',')[1].strip())
 
-        time = np.arange(len(data))/frequency
-        waveform = np.dstack((time*10**6, data - np.mean(data)))[0]
+        time = np.arange(len(data)) / frequency
+        waveform = np.dstack((time * 10**6, data - np.mean(data)))[0]
 
         points = np.where(waveform[:, 1] >= get_Vt(threshold, gain=gain))[0]
         dt = np.diff(waveform[points, 0])
@@ -253,12 +254,12 @@ class AE_cont(AE):
         event_times = []
         for label in np.arange(1, nclusters + 1):
             pos = np.where(clusters == label)[0][[0, -1]]
-            if np.diff(pos)[0] >= (PDT*10**-6*frequency):
+            if np.diff(pos)[0] >= (PDT * 10**-6 * frequency):
                 start = points[pos[0]]
-                stop = points[pos[1] + 1] +
-                       int(np.round(HDT*10**-6*frequency) + 1)
+                stop = (points[pos[1] + 1] +
+                        int(np.round(HDT * 10**-6 * frequency) + 1))
                 wavelet = waveform[start:stop]
-                event_times.append(wavelet[0, 0]*10**-6 + s_time)
+                event_times.append(wavelet[0, 0] * 10**-6 + s_time)
                 wavelet[:, 0] = wavelet[:, 0] - wavelet[0, 0]
                 wavelets.append(wavelet)
 
@@ -277,7 +278,7 @@ class AE_cont(AE):
         """
         output = []
         for wavelet, e_time in zip(self.wavelets, self.event_times):
-            output.append(np.dstack((np.ones(len(wavelet))*e_time,
+            output.append(np.dstack((np.ones(len(wavelet)) * e_time,
                           wavelet[:, 0], wavelet[:, 1]))[0])
 
         if filename is None:

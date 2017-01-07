@@ -14,8 +14,8 @@ __author__ = 'Michael N Rossol'
 
 
 __all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle",
-           "line_plot", "dual_plot", "error_plot", "contour_plot",
-           "surface_plot", "colorbar"]
+           "line_plot", "dual_plot", "error_plot", "bar_chart",
+           "contour_plot", "scatter_plot", "surface_plot", "colorbar"]
 
 
 COLORS = {
@@ -304,7 +304,7 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
                                   COLORS["lime"],
                                   COLORS["brown"]))
 
-    bar_width = (1 - bar_gap*2)/len(bars)
+    bar_width = (1 - bar_gap * 2) / len(bars)
     s_width = bar_gap
     c_shift = 0.5
 
@@ -312,7 +312,7 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
     axis = fig.add_subplot(111)
 
     for i, yheight in enumerate(bars):
-        axis.bar(xs+s_width + bar_width*i, yheight, bar_width,
+        axis.bar(xs + s_width + bar_width * i, yheight, bar_width,
                  color=next(colors), orientation=orientation)
 
     mpl.rcParams['font.sans-serif'] = font
@@ -844,23 +844,23 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
     z_m = ma.masked_invalid(z)
 
     a_ratio = z.shape
-    a_ratio = a_ratio[1]/a_ratio[0]
+    a_ratio = a_ratio[1] / a_ratio[0]
 
     if isinstance(figsize, (int, float)):
-        figsize = [figsize*a_ratio, figsize]
+        figsize = [figsize * a_ratio, figsize]
     else:
         figsize = max(figsize)
-        figsize = [figsize*a_ratio, figsize]
+        figsize = [figsize * a_ratio, figsize]
 
     if colorbar_on:
         if colorbar_location in ['top', 'bottom']:
-            figsize[1] += figsize[1]/10
-            cbar_size = figsize[0]/20
+            figsize[1] += figsize[1] / 10
+            cbar_size = figsize[0] / 20
         else:
-            figsize[0] += figsize[0]/10
-            cbar_size = figsize[1]/20
+            figsize[0] += figsize[0] / 10
+            cbar_size = figsize[1] / 20
     else:
-        cbar_size = max(figsize)/20
+        cbar_size = max(figsize) / 20
 
     if zlim is None:
         zmin, zmax = np.nanmin(z), np.nanmax(z)
@@ -868,9 +868,9 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
         zmin, zmax = zlim
 
     if major_spacing is None:
-        major_spacing = (zmax - zmin)/10
+        major_spacing = (zmax - zmin) / 10
     if minor_spacing is None:
-        minor_spacing = major_spacing/10
+        minor_spacing = major_spacing / 10
 
     cl_levels = np.arange(zmin, zmax + major_spacing, major_spacing)
     cf_levels = np.arange(zmin, zmax + minor_spacing, minor_spacing)
@@ -878,7 +878,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
     if colorbar_ticks is None:
         l_levels = cl_levels[::2]
     else:
-        l_levels = (zmax - zmin)/colorbar_ticks
+        l_levels = (zmax - zmin) / colorbar_ticks
         l_levels = np.arange(zmin, zmax + l_levels, l_levels)
 
     orientation = 'vertical'
@@ -1062,11 +1062,11 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
 
     if colorbar_on:
         if colorbar_location in ['top', 'bottom']:
-            figsize[1] += figsize[1]/10
-            cbar_size = figsize[0]/20
+            figsize[1] += figsize[1] / 10
+            cbar_size = figsize[0] / 20
         else:
-            figsize[0] += figsize[0]/10
-            cbar_size = figsize[1]/20
+            figsize[0] += figsize[0] / 10
+            cbar_size = figsize[1] / 20
 
         if zlim is None:
             zmax, zmin = c.max(), c.min()
@@ -1077,10 +1077,10 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
             l_levels = None
         else:
 
-            l_levels = (zmax - zmin)/colorbar_ticks
+            l_levels = (zmax - zmin) / colorbar_ticks
             l_levels = np.arange(zmin, zmax + l_levels, l_levels)
     else:
-        cbar_size = max(figsize)/20
+        cbar_size = max(figsize) / 20
 
     orientation = 'vertical'
     if colorbar_location in ['top', 'bottom']:
@@ -1092,7 +1092,7 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
     s = mplt.scatter(x, y, c=c, norm=mpl.colors.Normalize(vmin=zmin,
                                                           vmax=zmax))
     if line is not None:
-        axis.plot(line[:, 0], line[:, 1],  linestyle=linestyle,
+        axis.plot(line[:, 0], line[:, 1], linestyle=linestyle,
                   linewidth=linewidth, markersize=markersize, marker=marker,
                   color=color)
 
@@ -1268,7 +1268,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
         else:
             z_range = zlim[1] - zlim[0]
 
-        data_ratio = [range/x_range for range in [x_range, y_range, z_range]]
+        data_ratio = [range / x_range for range in [x_range, y_range, z_range]]
 
     if isinstance(figsize, (list, tuple)):
         figsize = max(figsize)
@@ -1276,7 +1276,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
     figsize = [figsize, figsize]
 
     if colorbar_on:
-        figsize[0] += figsize[0]/10
+        figsize[0] += figsize[0] / 10
 
     if zlim is None:
         zmin, zmax = np.nanmin(z), np.nanmax(z)
@@ -1286,7 +1286,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
     if colorbar_ticks is None:
         colorbar_ticks = 10
 
-    l_levels = (zmax - zmin)/colorbar_ticks
+    l_levels = (zmax - zmin) / colorbar_ticks
     l_levels = np.arange(zmin, zmax + l_levels, l_levels)
 
     norm = mpl.colors.Normalize(vmin=zmin, vmax=zmax, clip=True)
@@ -1416,14 +1416,14 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
         figsize = max(figsize)
 
     if ticklocation in ['right', 'left']:
-        figsize = (figsize/a_ratio, figsize)
+        figsize = (figsize / a_ratio, figsize)
         orientation = 'vertical'
     else:
-        figsize = (figsize, figsize/a_ratio)
+        figsize = (figsize, figsize / a_ratio)
         orientation = 'horizontal'
 
     if ticks is not None:
-        ticks = (zlim[1] - zlim[0])/ticks
+        ticks = (zlim[1] - zlim[0]) / ticks
         ticks = np.arange(zlim[0], zlim[1] + ticks, ticks)
 
     fig = mplt.figure(figsize=figsize, dpi=resolution)
@@ -1440,10 +1440,10 @@ def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
         cb.set_label(label, size=fontsize_label)
 
     if lines is not None:
-        lines = (zlim[1] - zlim[0])/lines
+        lines = (zlim[1] - zlim[0]) / lines
         lines = np.arange(zlim[0], zlim[1] + lines, lines)
-        cb.add_lines(lines, colors=(line_color,)*len(lines),
-                     linewidths=(linewidth,)*len(lines))
+        cb.add_lines(lines, colors=(line_color,) * len(lines),
+                     linewidths=(linewidth,) * len(lines))
 
     if filename is not None:
         mplt.savefig(filename, dpi=resolution, transparent=True,

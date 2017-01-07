@@ -268,8 +268,8 @@ class GSCS_Ply(Ply):
         fiberSubs = list(zip((Eaf, Etf, Gaf, Gtf, vaf, vtf, cf),
                          (fiber.E1, fiber.E2, fiber.G1, fiber.G2, fiber.v12,
                          fiber.v21, Vf)))
-        kf = (Eaf * Etf / (2 * Eaf - 4 * Etf * vaf ** 2
-              - 2 * Eaf * vtf)).subs(fiberSubs)
+        kf = (Eaf * Etf / (2 * Eaf - 4 * Etf * vaf ** 2 -
+              2 * Eaf * vtf)).subs(fiberSubs)
         etaf = (3 - 4 * 1 / 2 * (1 - Gtf / kf)).subs(fiberSubs)
 
         # Matrix Properties
@@ -284,41 +284,39 @@ class GSCS_Ply(Ply):
         matrixSubs = list(zip((Eam, Etm, Gam, Gtm, vam, vtm, cm),
                           (matrix.E1, matrix.E2, matrix.G1, matrix.G2,
                           matrix.v12, matrix.v21, 1 - Vf)))
-        km = (Eam * Etm / (2 * Eam - 4 * Etm * vam ** 2
-              - 2 * Eam * vtm)).subs(matrixSubs)
+        km = (Eam * Etm / (2 * Eam - 4 * Etm * vam ** 2 -
+              2 * Eam * vtm)).subs(matrixSubs)
         # mm = (1 + 4 * km * vam ** 2 / Eam).subs(matrixSubs)
         etam = (3 - 4 * 1 / 2 * (1 - Gtm / km)).subs(matrixSubs)
 
         # Axial Ply Properties (Hashin)
-        Eac = (Eam * cm + Eaf * cf + 4 * (vaf - vam) ** 2 * cm * cf / (cm / kf
-               + cf / km + 1 / Gtm)).subs(matrixSubs + fiberSubs)
-        vac = (vam * cm + vaf * cf + (vaf - vam) * (1 / km - 1 / kf) * cm
-               * cf / (cm / kf + cf / km
-               + 1 / Gtm)).subs(matrixSubs + fiberSubs)
-        Gac = (Gam * (Gam * cm + Gaf * (1 + cf)) / (Gam * (1 + cf)
-               + Gaf * cm)).subs(matrixSubs + fiberSubs)
-        kc = ((km * (kf + Gtm) * cm + kf * (km + Gtm) * cf) / ((kf + Gtm) * cm
-              + (km + Gtm) * cf)).subs(
-            matrixSubs + fiberSubs)
+        Eac = (Eam * cm + Eaf * cf + 4 * (vaf - vam) ** 2 * cm * cf /
+               (cm / kf + cf / km + 1 / Gtm)).subs(matrixSubs + fiberSubs)
+        vac = (vam * cm + vaf * cf + (vaf - vam) * (1 / km - 1 / kf) * cm *
+               cf / (cm / kf + cf / km + 1 / Gtm)).subs(matrixSubs + fiberSubs)
+        Gac = (Gam * (Gam * cm + Gaf * (1 + cf)) / (Gam * (1 + cf) +
+               Gaf * cm)).subs(matrixSubs + fiberSubs)
+        kc = ((km * (kf + Gtm) * cm + kf * (km + Gtm) * cf) / ((kf + Gtm) *
+              cm + (km + Gtm) * cf)).subs(matrixSubs + fiberSubs)
         Gtr = (Gtf / Gtm).subs(matrixSubs + fiberSubs)
         mc = (1 + 4 * kc * vac ** 2 / Eac)
 
         # Transverse Ply Properties (Hashin)
-        Achr = sp.simplify((3 * cf * cm**2 * (Gtr - 1) * (Gtr + etaf)
-                           + (Gtr * etam + etaf * etam - (Gtr * etam - etaf)
-                           * cf ** 3) * (cf * etam * (Gtr - 1)
-                           - (Gtr * etam + 1))).subs(matrixSubs + fiberSubs))
-        Bchr = sp.simplify((-3 * cf * cm**2 * (Gtr - 1) * (Gtr + etaf)
-                           + 1 / 2 * (etam * Gtr + (Gtr - 1) * cf + 1)
-                           * ((etam - 1) * (Gtr + etaf) - 2
-                           * (Gtr * etam - etaf) * cf**3) + cf / 2
-                           * (etam + 1) * (Gtr - 1) * (Gtr + etaf
-                           + (Gtr * etam - etaf)
-                           * cf**3)).subs(matrixSubs + fiberSubs))
-        Cchr = sp.simplify((3 * cf * cm ** 2 * (Gtr - 1) * (Gtr + etaf)
-                           + (etam * Gtr + (Gtr - 1) * cf + 1)
-                           * (Gtr + etaf + (Gtr * etam - etaf)
-                           * cf ** 3)).subs(matrixSubs + fiberSubs))
+        Achr = sp.simplify((3 * cf * cm**2 * (Gtr - 1) * (Gtr + etaf) +
+                           (Gtr * etam + etaf * etam - (Gtr * etam - etaf) *
+                            cf ** 3) * (cf * etam * (Gtr - 1) -
+                            (Gtr * etam + 1))).subs(matrixSubs + fiberSubs))
+        Bchr = sp.simplify((-3 * cf * cm**2 * (Gtr - 1) * (Gtr + etaf) +
+                           1 / 2 * (etam * Gtr + (Gtr - 1) * cf + 1) *
+                           ((etam - 1) * (Gtr + etaf) - 2 *
+                           (Gtr * etam - etaf) * cf**3) + cf / 2 *
+                           (etam + 1) * (Gtr - 1) * (Gtr + etaf +
+                           (Gtr * etam - etaf) *
+                           cf**3)).subs(matrixSubs + fiberSubs))
+        Cchr = sp.simplify((3 * cf * cm ** 2 * (Gtr - 1) * (Gtr + etaf) +
+                           (etam * Gtr + (Gtr - 1) * cf + 1) *
+                           (Gtr + etaf + (Gtr * etam - etaf) *
+                           cf ** 3)).subs(matrixSubs + fiberSubs))
 
         x = sp.Symbol('x')
         sols = sp.solve(Achr * x ** 2 + 2 * Bchr * x + Cchr, x)
@@ -378,22 +376,23 @@ class Laminate(object):
             Specifies 'Engineering' or 'Tensorial' strain.
         """
         if t_Plies is None:
-            assert len(Plies) == len(Layup), \
-                   "Must supply the same number of Plies and angles."
+            assert len(Plies) == len(Layup), "Must supply the same number \
+of Plies and angles."
         else:
-            assert len(Plies) == len(Layup) and len(Plies) == len(t_Plies), \
-                   "Must supply the same number of Plies and angles."
+            assert (len(Plies) == len(Layup) and
+                    len(Plies) == len(t_Plies)), "Must supply the same \
+number of Plies and angles."
 
         self.Plies = Plies
         self.Layup = Layup
 
         if t_Plies is None:
             t = 1
-            t_Plies = [t/len(self.Layup), ] * len(self.Layup)
+            t_Plies = [t / len(self.Layup), ] * len(self.Layup)
         else:
             t = sum(t_Plies)
 
-        z = (np.hstack((np.zeros(1), np.cumsum(t_Plies))) - t/2).tolist()
+        z = (np.hstack((np.zeros(1), np.cumsum(t_Plies))) - t / 2).tolist()
 
         self.t = t
         self.z = z
@@ -407,7 +406,7 @@ class Laminate(object):
             Dk = sp.zeros(3, 3)
             Q_Bar = ply.get_Q(theta, strain_type=strain_type)
             z_k = self.z[k]
-            z_k1 = self.z[k+1]
+            z_k1 = self.z[k + 1]
             for i in range(3):
                 for j in range(3):
                     Ak[i, j] = (z_k1 - z_k) * Q_Bar[i, j]
@@ -425,7 +424,7 @@ class Laminate(object):
          E22,
          G12,
          v12,
-         v21) = get_Elastic_Constants(sp.simplify(sp.N(A.inv()*self.t,
+         v21) = get_Elastic_Constants(sp.simplify(sp.N(A.inv() * self.t,
                                       chop=1e-10)), strain_type=strain_type)
 
         self.E11 = E11

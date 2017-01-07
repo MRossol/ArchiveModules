@@ -59,7 +59,7 @@ def nearest(array, value):
         else:
             return pos
     else:
-        pos = (np.sum((array - value)**2, axis=1)**(1/2)).argmin()
+        pos = (np.sum((array - value)**2, axis=1)**(1 / 2)).argmin()
         if len(array.shape) == 3:
             return np.unravel_index(pos, array.shape)
         else:
@@ -83,7 +83,7 @@ def find_linear_fit(data, max_pos):
 
     fit = []
 
-    for xo in range(max_pos-(max_pos//10)):
+    for xo in range(max_pos - (max_pos // 10)):
         linear_data = data[xo:max_pos]
         x = linear_data[:, 0]
         y = linear_data[:, 1]
@@ -116,14 +116,14 @@ def shift_SS(data, e1=0.1, e2=0.3):
     """
 
     m, b = find_linear_fit(data, nearest(data[:, 0], e2))[1:]
-    origin = -1*(b/m)
+    origin = -1 * (b / m)
     shift_data = data - [origin, 0]
 
     e1Pos = nearest(shift_data[:, 0], e1)
     e2Pos = nearest(shift_data[:, 0], e2)
     fitData = shift_data[e1Pos:e2Pos]
     m, b = fit_line(fitData)
-    origin = -1*(b/m)
+    origin = -1 * (b / m)
 
     return np.vstack((np.zeros((1, 2)), shift_data - [origin, 0]))
 
@@ -300,9 +300,9 @@ class DIC_3D(object):
         for filename in os.listdir(path):
             if filename.endswith('.mat') and not filename.startswith('.'):
                 mat_files.append(os.path.join(path, filename))
-            elif (filename.endswith('_0.tif')
-                  or filename.endswith('_0.tiff')
-                  and not filename.startswith('.')):
+            elif (filename.endswith('_0.tif') or
+                  filename.endswith('_0.tiff') and not
+                  filename.startswith('.')):
                 img_files.append(os.path.join(path, filename))
 
         if len(mat_files) == 0:
@@ -438,7 +438,7 @@ class DIC_3D(object):
                 dudx, dudy = fit_plane(u_data)[:-1]
                 dvdx, dvdy = fit_plane(v_data)[:-1]
 
-                strains.append([dudx, dvdy, (dvdx + dudy)/2])
+                strains.append([dudx, dvdy, (dvdx + dudy) / 2])
             else:
                 strain_data = np.dstack((data['exx'].flatten(),
                                         data['eyy'].flatten(),
@@ -599,19 +599,19 @@ class DIC_3D(object):
         ymax, xmax = image.shape[:2]
 
         x, y, z = self.get_contourData(frame, var, coordinates='Pixels')
-        y = -1*(y - ymax)
+        y = -1 * (y - ymax)
         z_m = ma.masked_invalid(z)
 
         a_ratio = image.shape
         a_ratio = a_ratio[1] / a_ratio[0]
 
         if isinstance(figsize, (int, float)):
-            cbar_size = figsize/20
-            figsize = (figsize*a_ratio, figsize)
+            cbar_size = figsize / 20
+            figsize = (figsize * a_ratio, figsize)
         else:
             figsize = max(figsize)
-            cbar_size = figsize/20
-            figsize = (figsize*a_ratio, figsize)
+            cbar_size = figsize / 20
+            figsize = (figsize * a_ratio, figsize)
 
         if zlim is None:
             cf_levels = np.linspace(np.nanmin(z), np.nanmax(z), 100)
@@ -621,7 +621,7 @@ class DIC_3D(object):
             if major_spacing is None:
                 major_spacing = (zlim[1] - zlim[0]) / 10
             if minor_spacing is None:
-                minor_spacing = major_spacing/10
+                minor_spacing = major_spacing / 10
 
             cl_levels = np.arange(zlim[0], zlim[1] + major_spacing,
                                   major_spacing)
@@ -716,9 +716,9 @@ class DIC_2D(object):
         for filename in os.listdir(path):
             if filename.endswith('.mat') and not filename.startswith('.'):
                 mat_files.append(os.path.join(path, filename))
-            elif (filename.endswith('.tif')
-                  or filename.endswith('.tiff')
-                  and not filename.startswith('.')):
+            elif (filename.endswith('.tif') or
+                  filename.endswith('.tiff') and not
+                  filename.startswith('.')):
                 img_files.append(os.path.join(path, filename))
 
         if len(mat_files) == 0:
@@ -824,7 +824,7 @@ class DIC_2D(object):
                 dudx, dudy = fit_plane(u_data)[:-1]
                 dvdx, dvdy = fit_plane(v_data)[:-1]
 
-                strains.append([dudx, dvdy, (dvdx + dudy)/2])
+                strains.append([dudx, dvdy, (dvdx + dudy) / 2])
             else:
                 strain_data = np.dstack((data['exx'].flatten(),
                                         data['eyy'].flatten(),
@@ -857,7 +857,7 @@ class DIC_2D(object):
         img_times = [os.path.getmtime(file) for file in self.img]
         load = [data[nearest(data[:, 0], img_t), 1] for img_t in img_times]
 
-        return np.asarray(load)/area
+        return np.asarray(load) / area
 
     def get_stress(self, area):
         """
@@ -880,7 +880,7 @@ class DIC_2D(object):
         mat_numbs = get_mat_numbs(self.mat, version='2D')
         load = data[mat_numbs, 2]
 
-        return load/area
+        return load / area
 
     def get_contourData(self, frame, var, coordinates="Metric"):
         """
@@ -993,19 +993,19 @@ class DIC_2D(object):
         ymax, xmax = image.shape[:2]
 
         x, y, z = self.get_contourData(frame, var, coordinates='Pixels')
-        y = -1*(y - ymax)
+        y = -1 * (y - ymax)
         z_m = ma.masked_invalid(z)
 
         a_ratio = image.shape
-        a_ratio = a_ratio[1]/a_ratio[0]
+        a_ratio = a_ratio[1] / a_ratio[0]
 
         if isinstance(figsize, (int, float)):
-            cbar_size = figsize/20
-            figsize = (figsize*a_ratio, figsize)
+            cbar_size = figsize / 20
+            figsize = (figsize * a_ratio, figsize)
         else:
             figsize = max(figsize)
-            cbar_size = figsize/20
-            figsize = (figsize*a_ratio, figsize)
+            cbar_size = figsize / 20
+            figsize = (figsize * a_ratio, figsize)
 
         if zlim is None:
             cf_levels = 100
@@ -1013,9 +1013,9 @@ class DIC_2D(object):
             l_levels = None
         else:
             if major_spacing is None:
-                major_spacing = (zlim[1] - zlim[0])/10
+                major_spacing = (zlim[1] - zlim[0]) / 10
             if minor_spacing is None:
-                minor_spacing = major_spacing/10
+                minor_spacing = major_spacing / 10
 
             cl_levels = np.arange(zlim[0], zlim[1] + major_spacing,
                                   major_spacing)
@@ -1025,7 +1025,7 @@ class DIC_2D(object):
             if colorbar_ticks is None:
                 l_levels = cl_levels[::2]
             else:
-                l_levels = (zlim[1] - zlim[0])/colorbar_ticks
+                l_levels = (zlim[1] - zlim[0]) / colorbar_ticks
                 l_levels = np.arange(zlim[0], zlim[1] + l_levels, l_levels)
 
         orientation = 'vertical'
