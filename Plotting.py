@@ -1,5 +1,6 @@
-"""Package of custom plotting functions"""
-
+"""
+Package of custom plotting functions
+"""
 import itertools
 import matplotlib as mpl
 import matplotlib.pyplot as mplt

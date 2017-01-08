@@ -1,3 +1,6 @@
+"""
+Package to perform laminate analysis symbolically
+"""
 import sympy as sp
 import numpy as np
 import math

@@ -1,3 +1,6 @@
+"""
+Package to perform Laminate Analysis numerically
+"""
 import sympy as sp
 import numpy as np
 import math

@@ -1,3 +1,6 @@
+"""
+Set up logger for logging
+"""
 import logging
 
 

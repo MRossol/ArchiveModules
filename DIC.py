@@ -1,3 +1,6 @@
+"""
+Package for analyzing and plotting both 2D and 3D DIC data.
+"""
 import os
 import datetime
 import scipy.io

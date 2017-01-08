@@ -1,3 +1,7 @@
+"""
+Package for analyzing Accumulator Volume Experiments
+"""
+
 import numpy as np
 import scipy as sc
 import scipy.optimize

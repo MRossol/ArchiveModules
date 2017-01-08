@@ -1,3 +1,6 @@
+"""
+Class for performing autocorrelation analysis on speckled images
+"""
 import numpy as np
 from scipy import misc
 import scipy

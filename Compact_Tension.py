@@ -1,4 +1,6 @@
-""" Script to automate processing of compact tension stress-strain curves"""
+"""
+Script to automate processing of compact tension stress-strain curves
+"""
 import numpy as np
 
 __author__ = 'MNR'

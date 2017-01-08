@@ -1,4 +1,6 @@
-
+"""
+Image processing tools to extract strain from image sequences
+"""
 from scipy import ndimage
 import numpy as np
 import cv2

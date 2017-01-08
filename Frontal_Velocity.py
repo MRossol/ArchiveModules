@@ -1,3 +1,6 @@
+"""
+Scripts to extract frontal velocity from image sequences
+"""
 import os
 import numpy as np
 import copy

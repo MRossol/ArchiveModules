@@ -1,4 +1,6 @@
-""" Python Script to extract acoustic events from raw waveform data"""
+"""
+Package to extract acoustic events from raw waveform data
+"""
 import datetime
 import numpy as np
 import pandas as pd
