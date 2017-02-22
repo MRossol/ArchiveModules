@@ -88,9 +88,9 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
               xticks=None, yticks=None, ticksize=(8, 2),
               colors=None, linestyles='Automatic', linewidth=2, markers=None,
               markersize=5, markeredge=['k', 0.5], font='Arial',
-              fontsize_axes=21, fontsize_other=18, borderwidth=2,
-              add_legend=None, legend_location=0, figsize=(8, 6),
-              resolution=300, showfig=True, filename=None):
+              fontsize_axes=18, fontsize_other=16, borderwidth=2,
+              add_legend=None, legend_location=0, figsize=(6.4, 4.8),
+              resolution=100, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -250,9 +250,9 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
 def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
               ylim=None, xticks=None, yticks=None, ticksize=(8, 2),
               colors=None, orientation='vertical', font='Arial',
-              fontsize_axes=21, fontsize_other=18, borderwidth=2,
-              add_legend=None, legend_location=0, figsize=(8, 6),
-              resolution=300, showfig=True, filename=None):
+              fontsize_axes=18, fontsize_other=16, borderwidth=2,
+              add_legend=None, legend_location=0, figsize=(6.4, 4.8),
+              resolution=100, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -392,9 +392,9 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
               xticks=None, yticks=None, ticksize=(8, 2), axis_colors='k',
               colors=None, linestyles='Automatic', linewidth=2, markers=None,
               markersize=5, markeredge=['k', 0.5], font='Arial',
-              fontsize_axes=21, fontsize_other=18, borderwidth=2,
-              add_legend=None, legend_location=0, figsize=(8, 6),
-              resolution=300, showfig=True, filename=None):
+              fontsize_axes=18, fontsize_other=16, borderwidth=2,
+              add_legend=None, legend_location=0, figsize=(6.4, 4.8),
+              resolution=100, showfig=True, filename=None):
     """
 
     Parameters
@@ -629,9 +629,9 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
                xticks=None, yticks=None, ticksize=(8, 2),
                colors=None, linestyles=None, linewidth=2, markers='Automatic',
                markersize=5, markeredge=['k', 0.5], font='Arial',
-               fontsize_axes=21, fontsize_other=18, borderwidth=2,
-               add_legend=None, legend_location=0, figsize=(8, 6),
-               resolution=300, showfig=True, filename=None):
+               fontsize_axes=18, fontsize_other=16, borderwidth=2,
+               add_legend=None, legend_location=0, figsize=(6.4, 4.8),
+               resolution=100, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -809,10 +809,10 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
                  opacity=1., colorbar_on=True, colorbar_location='right',
                  colorbar_label=None, colorbar_lines=True,
                  colorbar_ticks=None, colormap='jet', font='Arial',
-                 fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
+                 fontsize_axes=18, fontsize_other=16, fontsize_colorbar=18,
                  axis_on=False, xlabel=None, ylabel=None, xticks=None,
                  yticks=None, ticksize=(8, 2), borderwidth=2, figsize=6,
-                 resolution=300, showfig=True, filename=None):
+                 resolution=100, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -1023,10 +1023,11 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
                  markersize=5, markeredge=['k', 0.5], colorbar_on=True,
                  colorbar_location='right', colorbar_label=None,
                  colorbar_lines=True, colorbar_ticks=None, colormap='jet',
-                 font='Arial', fontsize_axes=21, fontsize_other=18,
-                 fontsize_colorbar=21, xlabel=None, ylabel=None, xticks=None,
-                 yticks=None, ticksize=(8, 2), borderwidth=2, figsize=(8, 6),
-                 resolution=300, showfig=True, filename=None):
+                 font='Arial', fontsize_axes=18, fontsize_other=16,
+                 fontsize_colorbar=18, xlabel=None, ylabel=None, xticks=None,
+                 yticks=None, ticksize=(8, 2), borderwidth=2,
+                 figsize=(6.4, 4.8), resolution=100, showfig=True,
+                 filename=None):
     """
     Parameters
     ----------
@@ -1222,10 +1223,10 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
 def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
                  box_ratio='Automatic', colorbar_on=True, colorbar_label=None,
                  colorbar_ticks=None, colormap='jet', font='Arial',
-                 fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
+                 fontsize_axes=18, fontsize_other=16, fontsize_colorbar=18,
                  axis_on=False, xlabel=None, ylabel=None, zlabel=None,
                  xticks=None, yticks=None, zticks=None, ticksize=(8, 2),
-                 borderwidth=2, figsize=6, resolution=300, showfig=True,
+                 borderwidth=2, figsize=6, resolution=100, showfig=True,
                  filename=None):
     """
     Parameters
@@ -1424,7 +1425,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
 def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
              colormap='jet', extend='neither', ticklocation='right',
              fontsize_other=18, label=None, fontsize_label=21, figsize=6,
-             resolution=300, showfig=True, filename=None):
+             resolution=100, showfig=True, filename=None):
 
     """
     Parameters
