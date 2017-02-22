@@ -14,9 +14,10 @@ import numpy.ma as ma
 __author__ = 'Michael N Rossol'
 
 
-__all__ = ["COLORS", "get_COLORS", "def_linestyles", "def_markers", "riffle",
-           "line_plot", "dual_plot", "error_plot", "bar_chart",
-           "contour_plot", "scatter_plot", "surface_plot", "colorbar"]
+__all__ = ["COLORS", "change_tick_style", "get_COLORS", "def_linestyles",
+           "def_markers", "riffle", "line_plot", "dual_plot", "error_plot",
+           "bar_chart", "contour_plot", "scatter_plot", "surface_plot",
+           "colorbar"]
 
 
 COLORS = {
@@ -32,6 +33,19 @@ COLORS = {
     "brown": (0.4745, 0.3333, 0.2824),
     "black": (0.0, 0.0, 0.0)
 }
+
+
+def change_tick_style(style):
+    if style == 'classic':
+        mpl.rcParams['xtick.direction'] = 'in'
+        mpl.rcParams['ytick.direction'] = 'in'
+        mpl.rcParams['xtick.top'] = True
+        mpl.rcParams['ytick.right'] = True
+    else:
+        mpl.rcParams['xtick.direction'] = 'out'
+        mpl.rcParams['ytick.direction'] = 'out'
+        mpl.rcParams['xtick.top'] = False
+        mpl.rcParams['ytick.right'] = False
 
 
 def get_COLORS(colors, n=None):
@@ -71,9 +85,10 @@ def riffle(*args):
 
 
 def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
-              xticks=None, yticks=None, ticksize=(8, 2), colors=None,
-              linestyles='Automatic', linewidth=2, markers=None, markersize=5,
-              font='Arial', fontsize_axes=21, fontsize_other=18, borderwidth=2,
+              xticks=None, yticks=None, ticksize=(8, 2),
+              colors=None, linestyles='Automatic', linewidth=2, markers=None,
+              markersize=5, markeredge=['k', 0.5], font='Arial',
+              fontsize_axes=21, fontsize_other=18, borderwidth=2,
               add_legend=None, legend_location=0, figsize=(8, 6),
               resolution=300, showfig=True, filename=None):
     """
@@ -110,6 +125,8 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
+    markeredge : 'list'
+        [marker edge color, marker edge width]
     markers : 'ndarray'
         Iterable list of Matplotlib designations for the marker for each line
         in 'data'.
@@ -173,13 +190,19 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     else:
         markers = itertools.cycle(markers)
 
+    if markeredge is not None:
+        mec, mew = markeredge
+    else:
+        mec = None
+        mew = None
+
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis = fig.add_subplot(111)
 
     for line in lines:
-        axis.plot(line[:, 0], line[:, 1], linewidth=linewidth,
-                  markersize=markersize, marker=next(markers),
-                  color=next(colors), linestyle=next(linestyles))
+        axis.plot(line[:, 0], line[:, 1], markersize=markersize,
+                  marker=next(markers), mec=mec, mew=mew, color=next(colors),
+                  linestyle=next(linestyles), linewidth=linewidth)
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -367,10 +390,11 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
 
 def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
               xticks=None, yticks=None, ticksize=(8, 2), axis_colors='k',
-              colors=None, linestyles='Automatic', linewidth=2, markersize=5,
-              markers=None, font='Arial', fontsize_axes=21, fontsize_other=18,
-              borderwidth=2, add_legend=None, legend_location=0,
-              figsize=(8, 6), resolution=300, showfig=True, filename=None):
+              colors=None, linestyles='Automatic', linewidth=2, markers=None,
+              markersize=5, markeredge=['k', 0.5], font='Arial',
+              fontsize_axes=21, fontsize_other=18, borderwidth=2,
+              add_legend=None, legend_location=0, figsize=(8, 6),
+              resolution=300, showfig=True, filename=None):
     """
 
     Parameters
@@ -410,6 +434,8 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
+    markeredge : 'list'
+        [marker edge color, marker edge width]
     markers : 'ndarray'
         Iterable list of Matplotlib designations for the marker for each line
         in 'data'.
@@ -505,20 +531,28 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
         axis_color1 = axis_colors[0]
         axis_color2 = axis_colors[1]
 
+    if markeredge is not None:
+        mec, mew = markeredge
+    else:
+        mec = None
+        mew = None
+
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis1 = fig.add_subplot(111)
 
     for line in lines1:
         axis1.plot(line[:, 0], line[:, 1], linewidth=linewidth,
                    markersize=markersize, marker=next(markers1),
-                   color=next(colors1), linestyle=next(linestyles1))
+                   color=next(colors1), linestyle=next(linestyles1),
+                   mec=mec, mew=mew)
 
     axis2 = axis1.twinx()
 
     for line in lines2:
         axis2.plot(line[:, 0], line[:, 1], linewidth=linewidth,
                    markersize=markersize, marker=next(markers2),
-                   color=next(colors2), linestyle=next(linestyles2))
+                   color=next(colors2), linestyle=next(linestyles2),
+                   mec=mec, mew=mew)
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -592,12 +626,12 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
 
 def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
-               xticks=None, yticks=None, ticksize=(8, 2), colors=None,
-               linestyles=None, linewidth=2, markersize=5,
-               markers='Automatic', font='Arial', fontsize_axes=21,
-               fontsize_other=18, borderwidth=2, add_legend=None,
-               legend_location=0, figsize=(8, 6), resolution=300,
-               showfig=True, filename=None):
+               xticks=None, yticks=None, ticksize=(8, 2),
+               colors=None, linestyles=None, linewidth=2, markers='Automatic',
+               markersize=5, markeredge=['k', 0.5], font='Arial',
+               fontsize_axes=21, fontsize_other=18, borderwidth=2,
+               add_legend=None, legend_location=0, figsize=(8, 6),
+               resolution=300, showfig=True, filename=None):
     """
     Parameters
     ----------
@@ -633,6 +667,8 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         Line width for each line in 'data'.
     markersize : 'Float'
         Marker size for each marker in 'data'.
+    markeredge : 'list'
+        [marker edge color, marker edge width]
     markers : 'ndarray'
         Iterable list of Matplotlib designations for the marker for each line
         in 'data'.
@@ -696,6 +732,12 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     else:
         markers = itertools.cycle(markers)
 
+    if markeredge is not None:
+        mec, mew = markeredge
+    else:
+        mec = None
+        mew = None
+
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis = fig.add_subplot(111)
 
@@ -716,7 +758,8 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
         axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth,
                       markersize=markersize, marker=next(markers),
-                      color=next(colors), linestyle=next(linestyles))
+                      color=next(colors), linestyle=next(linestyles),
+                      mec=mec, mew=mew)
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -765,7 +808,7 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
                  minor_spacing=None, contour_width=1, contour_color='k',
                  opacity=1., colorbar_on=True, colorbar_location='right',
                  colorbar_label=None, colorbar_lines=True,
-                 colorbar_ticks=None, colormap=None, font='Arial',
+                 colorbar_ticks=None, colormap='jet', font='Arial',
                  fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
                  axis_on=False, xlabel=None, ylabel=None, xticks=None,
                  yticks=None, ticksize=(8, 2), borderwidth=2, figsize=6,
@@ -976,10 +1019,10 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
 
 
 def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
-                 linestyle=None, linewidth=2, color=None, marker=None,
-                 markersize=5, colorbar_on=True, colorbar_location='right',
-                 colorbar_label=None, colorbar_lines=True,
-                 colorbar_ticks=None, colormap=None,
+                 color=None, linestyle=None, linewidth=2, marker=None,
+                 markersize=5, markeredge=['k', 0.5], colorbar_on=True,
+                 colorbar_location='right', colorbar_label=None,
+                 colorbar_lines=True, colorbar_ticks=None, colormap='jet',
                  font='Arial', fontsize_axes=21, fontsize_other=18,
                  fontsize_colorbar=21, xlabel=None, ylabel=None, xticks=None,
                  yticks=None, ticksize=(8, 2), borderwidth=2, figsize=(8, 6),
@@ -1005,6 +1048,8 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
         Line width for line in.
     markersize : 'Float'
         Marker size for marker.
+    markeredge : 'list'
+        [marker edge color, marker edge width]
     marker : 'ndarray'
         Marker for line.
     colorbar_on : 'boole', default=True
@@ -1087,15 +1132,24 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
     if colorbar_location in ['top', 'bottom']:
         orientation = 'horizontal'
 
+    if markeredge is not None:
+        mec, mew = markeredge
+        edgecolors = mec
+    else:
+        mec = None
+        mew = None
+        edgecolors = None
+
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis = fig.add_subplot(111)
 
-    s = mplt.scatter(x, y, c=c, norm=mpl.colors.Normalize(vmin=zmin,
-                                                          vmax=zmax))
+    s = mplt.scatter(x, y, c=c, edgecolors=edgecolors,
+                     norm=mpl.colors.Normalize(vmin=zmin, vmax=zmax))
+
     if line is not None:
         axis.plot(line[:, 0], line[:, 1], linestyle=linestyle,
                   linewidth=linewidth, markersize=markersize, marker=marker,
-                  color=color)
+                  color=color, mec=mec, mew=mew)
 
     if colormap is not None:
         s.set_cmap(colormap)
@@ -1167,7 +1221,7 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
 
 def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
                  box_ratio='Automatic', colorbar_on=True, colorbar_label=None,
-                 colorbar_ticks=None, colormap=None, font='Arial',
+                 colorbar_ticks=None, colormap='jet', font='Arial',
                  fontsize_axes=21, fontsize_other=18, fontsize_colorbar=21,
                  axis_on=False, xlabel=None, ylabel=None, zlabel=None,
                  xticks=None, yticks=None, zticks=None, ticksize=(8, 2),
@@ -1368,7 +1422,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
 
 
 def colorbar(zlim, ticks=None, lines=None, line_color='k', linewidth=1,
-             colormap=None, extend='neither', ticklocation='right',
+             colormap='jet', extend='neither', ticklocation='right',
              fontsize_other=18, label=None, fontsize_label=21, figsize=6,
              resolution=300, showfig=True, filename=None):
 
