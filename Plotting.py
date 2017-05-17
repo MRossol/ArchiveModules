@@ -625,7 +625,7 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
     mplt.close()
 
 
-def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
+def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
                xticks=None, yticks=None, ticksize=(8, 2),
                colors=None, linestyles=None, linewidth=2, markers='Automatic',
                markersize=5, markeredge=['k', 0.5], font='Arial',
@@ -635,9 +635,10 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     """
     Parameters
     ----------
-    data : 'ndarray', shape(data[i]) = (n,2,2)
-        Either a tuple or list of nx2X2 arrays or a single nx2X2 array.
-        data given as an array or list of [[x, sigma_x], [y, sigma_y]
+    data_error : 'list'
+        list of [(data, error)] arrays.
+        data is an nx2 array (x, y)
+        error is an nx2 array (x_error, y_error)
     xlabel : 'String'
         Label for x-axis.
     ylabel : 'String'
@@ -699,10 +700,8 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     -------
     Plots the lines in 'data' with given error bars.
     """
-    if not isinstance(data, (list, tuple)):
-        lines = (data,)
-    else:
-        lines = data
+    assert isinstance(data_error, (list, tuple)), 'Input data needs to be in \
+(data, error) pairs'
 
     if colors is not None:
         colors = itertools.cycle(colors)
@@ -741,20 +740,16 @@ def error_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
     fig = mplt.figure(figsize=figsize, dpi=resolution)
     axis = fig.add_subplot(111)
 
-    for line in lines:
-        x = line[:, 0, 0]
-        error = line[:, 0, 1]
-        if np.isnan(error).all():
+    for data, error in data_error:
+        x = data[:, 0]
+        x_error = error[:, 0]
+        if np.isnan(x_error).all():
             x_error = None
-        else:
-            x_error = error
 
-        y = line[:, 1, 0]
-        error = line[:, 1, 1]
-        if np.isnan(error).all():
+        y = data[:, 1]
+        y_error = error[:, 1]
+        if np.isnan(y_error).all():
             y_error = None
-        else:
-            y_error = error
 
         axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth,
                       markersize=markersize, marker=next(markers),
