@@ -626,7 +626,7 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
 
 def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
-               xticks=None, yticks=None, ticksize=(8, 2),
+               xticks=None, yticks=None, ticksize=(8, 2), capsize=6,
                colors=None, linestyles=None, linewidth=2, markers='Automatic',
                markersize=5, markeredge=['k', 0.5], font='Arial',
                fontsize_axes=18, fontsize_other=16, borderwidth=2,
@@ -655,6 +655,8 @@ def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    capsize : 'int'
+        size of error bar cap
     colors : 'ndarray'
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -754,7 +756,7 @@ def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
         axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth,
                       markersize=markersize, marker=next(markers),
                       color=next(colors), linestyle=next(linestyles),
-                      mec=mec, mew=mew)
+                      mec=mec, mew=mew, capsize=capsize, capthick=linewidth)
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
