@@ -86,6 +86,7 @@ def riffle(*args):
 
 def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
               xticks=None, yticks=None, ticksize=(8, 2),
+              xtick_labels=None, ytick_labels=None,
               colors=None, linestyles='Automatic', linewidth=2, markers=None,
               markersize=5, markeredge=['k', 0.5], font='Arial',
               fontsize_axes=18, fontsize_other=16, borderwidth=2,
@@ -112,6 +113,10 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    xtick_labels : 'list'
+        List of custome xticks. Note len(xticks) == len(xtick_labels)
+    ytick_labels : 'list'
+        List of custome yticks. Note len(yticks) == len(ytick_labels)
     colors : 'ndarray'
         Iterable list of colors to plot for each line in 'data'.
         Will be cycled if fewer entries are specified than the number of lines
@@ -228,9 +233,13 @@ def line_plot(data, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
     if xticks is not None:
         axis.set_xticks(xticks)
+        if xtick_labels is not None:
+            axis.set_xticklabels(xtick_labels)
 
     if yticks is not None:
         axis.set_yticks(yticks)
+        if ytick_labels is not None:
+            axis.set_yticklabels(ytick_labels)
 
     if add_legend is not None:
         mplt.legend(add_legend, prop={'size': 12}, loc=legend_location)
@@ -389,7 +398,8 @@ def bar_chart(data, bar_gap=0.1, xlabel=None, ylabel=None, xlim=None,
 
 
 def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
-              xticks=None, yticks=None, ticksize=(8, 2), axis_colors='k',
+              xticks=None, yticks=None, ticksize=(8, 2),
+              xtick_labels=None, ytick_labels=None, axis_colors='k',
               colors=None, linestyles='Automatic', linewidth=2, markers=None,
               markersize=5, markeredge=['k', 0.5], font='Arial',
               fontsize_axes=18, fontsize_other=16, borderwidth=2,
@@ -419,6 +429,10 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    xtick_labels : 'list'
+        List of custome xticks. Note len(xticks) == len(xtick_labels)
+    ytick_labels : 'list'
+        List of custome yticks. Note len(yticks) == len(ytick_labels)
     axis_colors : 'string', 'tuple'
         string indicating y-axis colors, tuple of strings indicates color of
         each y-axis
@@ -588,6 +602,8 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
     if xticks is not None:
         axis1.set_xticks(xticks)
+        if xtick_labels is not None:
+            axis1.set_xticklabels(xtick_labels)
 
     if yticks is not None:
         if len(np.asarray(yticks).shape) == 1:
@@ -596,6 +612,13 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
         else:
             axis1.set_set_yticks(yticks[0])
             axis2.set_set_yticks(yticks[1])
+        if ytick_labels is not None:
+            if len(np.asarray(ytick_labels).shape) == 1:
+                axis1.set_set_yticklabels(ytick_labels)
+                axis2.set_set_yticklabels(ytick_labels)
+            else:
+                axis1.set_set_yticklabels(ytick_labels[0])
+                axis2.set_set_yticklabels(ytick_labels[1])
 
     axis1.tick_params(axis='x', labelsize=fontsize_other, width=ticksize[1],
                       length=ticksize[0], color='k')
@@ -626,7 +649,8 @@ def dual_plot(data1, data2, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
 
 def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
-               xticks=None, yticks=None, ticksize=(8, 2), capsize=6,
+               xticks=None, yticks=None, ticksize=(8, 2),
+               xtick_labels=None, ytick_labels=None, capsize=6,
                colors=None, linestyles=None, linewidth=2, markers='Automatic',
                markersize=5, markeredge=['k', 0.5], font='Arial',
                fontsize_axes=18, fontsize_other=16, borderwidth=2,
@@ -655,6 +679,10 @@ def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    xtick_labels : 'list'
+        List of custome xticks. Note len(xticks) == len(xtick_labels)
+    ytick_labels : 'list'
+        List of custome yticks. Note len(yticks) == len(ytick_labels)
     capsize : 'int'
         size of error bar cap
     colors : 'ndarray'
@@ -753,10 +781,11 @@ def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
         if np.isnan(y_error).all():
             y_error = None
 
-        axis.errorbar(x, y, xerr=x_error, yerr=y_error, linewidth=linewidth,
-                      markersize=markersize, marker=next(markers),
-                      color=next(colors), linestyle=next(linestyles),
-                      mec=mec, mew=mew, capsize=capsize, capthick=linewidth)
+        axis.errorbar(x, y, xerr=x_error, yerr=y_error,
+                      linewidth=linewidth, markersize=markersize,
+                      marker=next(markers), color=next(colors),
+                      linestyle=next(linestyles), mec=mec, mew=mew,
+                      capsize=capsize, capthick=linewidth)
 
     mpl.rcParams['font.sans-serif'] = font
     mpl.rcParams['pdf.fonttype'] = 42
@@ -782,9 +811,13 @@ def error_plot(data_error, xlabel=None, ylabel=None, xlim=None, ylim=None,
 
     if xticks is not None:
         axis.set_xticks(xticks)
+        if xtick_labels is not None:
+            axis.set_xticklabels(xtick_labels)
 
     if yticks is not None:
         axis.set_yticks(yticks)
+        if ytick_labels is not None:
+            axis.set_yticklabels(ytick_labels)
 
     if add_legend is not None:
         mplt.legend(add_legend, prop={'size': 12}, loc=legend_location)
@@ -808,7 +841,8 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
                  colorbar_ticks=None, colormap='jet', font='Arial',
                  fontsize_axes=18, fontsize_other=16, fontsize_colorbar=18,
                  axis_on=False, xlabel=None, ylabel=None, xticks=None,
-                 yticks=None, ticksize=(8, 2), borderwidth=2, figsize=6,
+                 yticks=None, ticksize=(8, 2), xtick_labels=None,
+                 ytick_labels=None, borderwidth=2, figsize=6,
                  resolution=100, showfig=True, filename=None):
     """
     Parameters
@@ -863,6 +897,10 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    xtick_labels : 'list'
+        List of custome xticks. Note len(xticks) == len(xtick_labels)
+    ytick_labels : 'list'
+        List of custome yticks. Note len(yticks) == len(ytick_labels)
     boarderwidth : 'Int'
         Linewidth of plot frame
     figsize : 'Tuple', default = '(8,6)'
@@ -966,9 +1004,13 @@ def contour_plot(data, xlim=None, ylim=None, zlim=None, major_spacing=None,
 
         if xticks is not None:
             axis.set_xticks(xticks)
+            if xtick_labels is not None:
+                axis.set_xticklabels(xtick_labels)
 
         if yticks is not None:
             axis.set_yticks(yticks)
+            if ytick_labels is not None:
+                axis.set_yticklabels(ytick_labels)
 
         if colorbar_location == 'bottom':
             if xlabel is None:
@@ -1022,7 +1064,8 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
                  colorbar_lines=True, colorbar_ticks=None, colormap='jet',
                  font='Arial', fontsize_axes=18, fontsize_other=16,
                  fontsize_colorbar=18, xlabel=None, ylabel=None, xticks=None,
-                 yticks=None, ticksize=(8, 2), borderwidth=2,
+                 yticks=None, ticksize=(8, 2), xtick_labels=None,
+                 ytick_labels=None, borderwidth=2,
                  figsize=(6.4, 4.8), resolution=100, showfig=True,
                  filename=None):
     """
@@ -1078,6 +1121,10 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    xtick_labels : 'list'
+        List of custome xticks. Note len(xticks) == len(xtick_labels)
+    ytick_labels : 'list'
+        List of custome yticks. Note len(yticks) == len(ytick_labels)
     boarderwidth : 'Int'
         Linewidth of plot frame
     figsize : 'Tuple', default = '(8,6)'
@@ -1175,9 +1222,13 @@ def scatter_plot(data, line=None, xlim=None, ylim=None, zlim=None,
 
     if xticks is not None:
         axis.set_xticks(xticks)
+        if xtick_labels is not None:
+            axis.set_xticklabels(xtick_labels)
 
     if yticks is not None:
         axis.set_yticks(yticks)
+        if ytick_labels is not None:
+            axis.set_yticklabels(ytick_labels)
 
     if colorbar_on:
         cbar_padding = 0.1
@@ -1223,6 +1274,7 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
                  fontsize_axes=18, fontsize_other=16, fontsize_colorbar=18,
                  axis_on=False, xlabel=None, ylabel=None, zlabel=None,
                  xticks=None, yticks=None, zticks=None, ticksize=(8, 2),
+                 xtick_labels=None, ytick_labels=None,
                  borderwidth=2, figsize=6, resolution=100, showfig=True,
                  filename=None):
     """
@@ -1274,6 +1326,10 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
         ylim.
     ticksize : 'ndarray', default '[8,2]'
         Length and width of ticks.
+    xtick_labels : 'list'
+        List of custome xticks. Note len(xticks) == len(xtick_labels)
+    ytick_labels : 'list'
+        List of custome yticks. Note len(yticks) == len(ytick_labels)
     boarderwidth : 'Int'
         Linewidth of plot frame
     figsize : 'Tuple', default = '(8,6)'
@@ -1388,9 +1444,13 @@ def surface_plot(data, xlim=None, ylim=None, zlim=None, stride=1,
 
         if xticks is not None:
             axis.set_xticks(xticks)
+            if xtick_labels is not None:
+                axis.set_xticklabels(xtick_labels)
 
         if yticks is not None:
             axis.set_yticks(yticks)
+            if ytick_labels is not None:
+                axis.set_yticklabels(ytick_labels)
 
         if zticks is not None:
             axis.set_zticks(zticks)
